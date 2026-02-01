@@ -372,7 +372,9 @@ export default function App() {
             {PROJECTS.map((project, idx) => (
               <div
                 key={project.id}
-                className={`reveal group cursor-pointer ${idx % 2 !== 0 ? "md:mt-24" : ""}`}
+                className={`reveal group cursor-pointer ${
+                  idx % 2 !== 0 ? "md:mt-24" : ""
+                }`}
               >
                 <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-slate-100 mb-8 border border-slate-100 shadow-sm group-hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2">
                   <img
