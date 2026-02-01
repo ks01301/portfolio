@@ -53,7 +53,7 @@ export default function TechStack() {
   return (
     <section
       id="stack"
-      className="py-24 px-6 bg-slate-50 overflow-hidden min-h-screen flex flex-col justify-center"
+      className="py-24 px-6 bg-slate-50 dark:bg-slate-950 overflow-hidden min-h-screen flex flex-col justify-center"
     >
       <div className="max-w-6xl mx-auto w-full">
         <motion.div
@@ -63,9 +63,9 @@ export default function TechStack() {
           className="mb-16 text-center md:text-left"
         >
           <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">
-            TECH <span className="text-blue-600">STACK</span>
+            TECH <span className="text-blue-600 dark:text-blue-400">STACK</span>
           </h2>
-          <p className="text-slate-500 font-bold max-w-lg uppercase text-xs tracking-widest leading-loose">
+          <p className="text-slate-500 dark:text-slate-400 font-bold max-w-lg uppercase text-xs tracking-widest leading-loose">
             Explored technologies focused on Virtualization and Operations.
           </p>
         </motion.div>
@@ -79,7 +79,7 @@ export default function TechStack() {
                 layoutId={`card-${stack.id}`}
                 onClick={() => setSelectedStack(stack)}
                 whileHover={{ y: -5, borderColor: "#3b82f6" }}
-                className="bg-white rounded-xl p-10 cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 transition-all border-2 border-slate-200 group relative overflow-hidden"
+                className="bg-white dark:bg-slate-900 rounded-xl p-10 cursor-pointer shadow-xl hover:shadow-2xl hover:shadow-blue-500/10 transition-all border-2 border-slate-200 dark:border-slate-800 group relative overflow-hidden"
               >
                 <div
                   className={`absolute top-0 right-0 w-32 h-32 ${stack.color} opacity-10 rounded-bl-[100%] transition-transform group-hover:scale-150`}
@@ -91,10 +91,10 @@ export default function TechStack() {
                   >
                     <Icon className="w-8 h-8" />
                   </div>
-                  <h3 className="text-3xl font-black mb-2 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-3xl font-black mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {stack.title}
                   </h3>
-                  <p className="text-slate-500 font-medium">
+                  <p className="text-slate-500 dark:text-slate-400 font-medium">
                     {stack.description}
                   </p>
 
@@ -102,7 +102,7 @@ export default function TechStack() {
                     {stack.techs.map((t, i) => (
                       <span
                         key={i}
-                        className="px-3 py-1 bg-slate-100 rounded-xl text-xs font-bold text-slate-600 border border-slate-200"
+                        className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
                       >
                         {t.name}
                       </span>
@@ -122,23 +122,23 @@ export default function TechStack() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 dark:bg-slate-950/60 backdrop-blur-sm"
             onClick={() => setSelectedStack(null)}
           >
             <motion.div
               layoutId={`card-${selectedStack.id}`}
-              className="bg-white w-full max-w-5xl max-h-[85vh] overflow-y-auto rounded-xl p-8 md:p-12 shadow-2xl relative border border-slate-200"
+              className="bg-white dark:bg-slate-900 w-full max-w-5xl max-h-[85vh] overflow-y-auto rounded-xl p-8 md:p-12 shadow-2xl relative border border-slate-200 dark:border-slate-800"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setSelectedStack(null)}
-                className="absolute top-8 right-8 p-2 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+                className="absolute top-8 right-8 p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
               >
-                <X className="w-6 h-6 text-slate-900" />
+                <X className="w-6 h-6 text-slate-900 dark:text-white" />
               </button>
 
               <div className="flex flex-col gap-10">
-                <div className="flex items-center gap-6 pb-6 border-b border-slate-100">
+                <div className="flex items-center gap-6 pb-6 border-b border-slate-100 dark:border-slate-800">
                   <div
                     className={`w-20 h-20 ${selectedStack.color} rounded-xl flex items-center justify-center text-white shadow-xl`}
                   >
@@ -148,7 +148,7 @@ export default function TechStack() {
                     <h3 className="text-4xl md:text-5xl font-black">
                       {selectedStack.title}
                     </h3>
-                    <p className="text-slate-500 font-medium text-lg mt-1">
+                    <p className="text-slate-500 dark:text-slate-400 font-medium text-lg mt-1">
                       {selectedStack.description}
                     </p>
                   </div>
@@ -158,13 +158,13 @@ export default function TechStack() {
                   {selectedStack.techs.map((tech) => (
                     <div
                       key={tech.name}
-                      className="bg-slate-50 rounded-xl p-6 md:p-8 hover:bg-slate-100 transition-colors border border-slate-100"
+                      className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 md:p-8 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-100 dark:border-slate-700"
                     >
                       <div className="flex flex-col md:flex-row gap-8 items-start">
                         {/* 이미지 영역 (왼쪽) */}
                         <div className="w-full md:w-1/3 shrink-0">
                           {tech.image ? (
-                            <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-md border border-slate-200">
+                            <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-md border border-slate-200 dark:border-slate-700">
                               <img
                                 src={tech.image}
                                 alt={tech.name}
@@ -172,7 +172,7 @@ export default function TechStack() {
                               />
                             </div>
                           ) : (
-                            <div className="aspect-[4/3] rounded-xl bg-slate-200 flex items-center justify-center text-slate-400 font-bold border border-slate-300">
+                            <div className="aspect-[4/3] rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold border border-slate-300 dark:border-slate-600">
                               NO IMAGE
                             </div>
                           )}
@@ -181,10 +181,10 @@ export default function TechStack() {
                         {/* 설명 영역 (오른쪽) */}
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-4">
-                            <Terminal className="w-6 h-6 text-blue-600" />
+                            <Terminal className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                             <h4 className="text-2xl font-black">{tech.name}</h4>
                           </div>
-                          <p className="text-slate-600 leading-relaxed font-medium text-lg">
+                          <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-medium text-lg">
                             {tech.description}
                           </p>
                         </div>

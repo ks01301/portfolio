@@ -34,14 +34,14 @@ export default function About() {
         <motion.div
           variants={bentoItemVariants}
           whileHover={{ scale: 0.98 }}
-          className="md:col-span-2 md:row-span-2 bg-white rounded-xl p-10 border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-2xl transition-shadow overflow-hidden relative group"
+          className="md:col-span-2 md:row-span-2 bg-white dark:bg-slate-900 rounded-xl p-10 border-2 border-slate-200 dark:border-slate-800 shadow-xl flex flex-col justify-between hover:shadow-2xl transition-all duration-300 overflow-hidden relative group"
         >
           <div className="relative z-10">
             <h3 className="text-3xl font-black mb-4">
               Hello, I'm <br />
               Gildong Hong
             </h3>
-            <p className="text-slate-500 font-medium leading-relaxed">
+            <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
               서울을 기반으로 활동하는 개발자입니다. <br />
               기술의 심미성과 효율성 사이의 완벽한 균형을 찾는 것을 즐깁니다.{" "}
               <br />
@@ -51,7 +51,7 @@ export default function About() {
           <div className="flex items-center gap-4 relative z-10">
             <motion.button
               whileHover={{ x: 5 }}
-              className="flex items-center gap-2 font-bold text-blue-600"
+              className="flex items-center gap-2 font-bold text-blue-600 dark:text-blue-400"
             >
               Learn more <ArrowUpRight className="w-4 h-4" />
             </motion.button>
@@ -69,7 +69,7 @@ export default function About() {
         <motion.div
           variants={bentoItemVariants}
           whileHover={{ y: -5, backgroundColor: "#2563eb" }}
-          className="md:col-span-1 bg-slate-900 rounded-xl p-8 text-white flex flex-col justify-center items-center text-center cursor-pointer group"
+          className="md:col-span-1 bg-slate-900 dark:bg-slate-800 rounded-xl p-8 text-white flex flex-col justify-center items-center text-center cursor-pointer group shadow-xl hover:shadow-2xl transition-all duration-300"
         >
           <motion.div
             initial={{ scale: 0.5 }}
@@ -86,14 +86,30 @@ export default function About() {
         {/* Bento Item 3: Skills Icon */}
         <motion.div
           variants={bentoItemVariants}
-          className="md:col-span-1 bg-white rounded-xl p-8 border border-slate-100 flex items-center justify-center group"
+          className="md:col-span-1 bg-white dark:bg-slate-900 rounded-xl p-8 border-2 border-slate-200 dark:border-slate-800 shadow-xl flex items-center justify-center group hover:shadow-2xl transition-all duration-300"
         >
           <div className="grid grid-cols-2 gap-3">
             {[
-              { Icon: Globe, color: "text-blue-600", bg: "bg-blue-50" },
-              { Icon: Cpu, color: "text-purple-600", bg: "bg-purple-50" },
-              { Icon: Layers, color: "text-orange-600", bg: "bg-orange-50" },
-              { Icon: Terminal, color: "text-green-600", bg: "bg-green-50" },
+              {
+                Icon: Globe,
+                color: "text-blue-600 dark:text-blue-400",
+                bg: "bg-blue-50 dark:bg-blue-900/20",
+              },
+              {
+                Icon: Cpu,
+                color: "text-purple-600 dark:text-purple-400",
+                bg: "bg-purple-50 dark:bg-purple-900/20",
+              },
+              {
+                Icon: Layers,
+                color: "text-orange-600 dark:text-orange-400",
+                bg: "bg-orange-50 dark:bg-orange-900/20",
+              },
+              {
+                Icon: Terminal,
+                color: "text-green-600 dark:text-green-400",
+                bg: "bg-green-50 dark:bg-green-900/20",
+              },
             ].map(({ Icon, color, bg }, i) => (
               <motion.div
                 key={i}
@@ -109,7 +125,7 @@ export default function About() {
         {/* Bento Item 4: Marquee/List Skills */}
         <motion.div
           variants={bentoItemVariants}
-          className="md:col-span-2 bg-[#f0f2f5] rounded-xl p-8 overflow-hidden flex flex-col justify-center relative"
+          className="md:col-span-2 bg-[#f0f2f5] dark:bg-slate-800/50 rounded-xl p-8 overflow-hidden flex flex-col justify-center relative border-2 border-slate-200/50 dark:border-slate-700/50 shadow-inner"
         >
           <motion.div
             className="flex flex-wrap gap-2"
@@ -133,7 +149,7 @@ export default function About() {
                     backgroundColor: "#2563eb",
                     color: "#fff",
                   }}
-                  className="px-4 py-2 bg-white rounded-xl text-sm font-black shadow-sm border border-slate-100 cursor-default transition-colors"
+                  className="px-4 py-2 bg-white dark:bg-slate-700 rounded-xl text-sm font-black shadow-sm border border-slate-100 dark:border-slate-600 cursor-default transition-colors dark:text-white dark:shadow-md"
                 >
                   {skill}
                 </motion.span>
