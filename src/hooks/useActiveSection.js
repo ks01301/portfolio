@@ -9,7 +9,7 @@ export function useActiveSection() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "about", "projects", "contact"];
+      const sections = ["home", "about", "stack", "contact"];
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {

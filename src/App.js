@@ -1,9 +1,8 @@
-import React from "react";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import Hero from "./components/sections/Hero";
 import About from "./components/sections/About";
-import Projects from "./components/sections/Projects";
+import TechStack from "./components/sections/TechStack";
 import Contact from "./components/sections/Contact";
 import { useScrollProgress } from "./hooks/useScrollProgress";
 import { useActiveSection } from "./hooks/useActiveSection";
@@ -52,7 +51,7 @@ export default function App() {
       <main>
         <Hero />
         <About />
-        <Projects />
+        <TechStack />
         <Contact />
       </main>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowUpRight, Globe, Cpu, Layers, Terminal } from "lucide-react";
+import { motion } from "framer-motion";
 
 const SKILLS = [
   {
@@ -10,12 +11,31 @@ const SKILLS = [
   { category: "Design & DevTools", items: ["Figma", "Docker", "Git", "Jest"] },
 ];
 
+const bentoItemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export default function About() {
   return (
     <section id="about" className="py-24 px-6 max-w-6xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-auto md:h-[600px]">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ staggerChildren: 0.1 }}
+        className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-auto md:h-[600px]"
+      >
         {/* Bento Item 1: Profile */}
-        <div className="reveal md:col-span-2 md:row-span-2 bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-xl transition-all overflow-hidden relative group">
+        <motion.div
+          variants={bentoItemVariants}
+          whileHover={{ scale: 0.98 }}
+          className="md:col-span-2 md:row-span-2 bg-white rounded-xl p-10 border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-2xl transition-shadow overflow-hidden relative group"
+        >
           <div className="relative z-10">
             <h3 className="text-3xl font-black mb-4">
               Hello, I'm <br />
@@ -29,58 +49,104 @@ export default function About() {
             </p>
           </div>
           <div className="flex items-center gap-4 relative z-10">
-            <button className="flex items-center gap-2 font-bold text-blue-600 hover:gap-4 transition-all">
+            <motion.button
+              whileHover={{ x: 5 }}
+              className="flex items-center gap-2 font-bold text-blue-600"
+            >
               Learn more <ArrowUpRight className="w-4 h-4" />
-            </button>
+            </motion.button>
           </div>
-          <div className="absolute bottom-[-20px] right-[-20px] w-64 h-64 bg-blue-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-        </div>
+          <div className="absolute bottom-[-20px] right-[-20px] w-64 h-64 bg-blue-50 rounded-xl opacity-50 group-hover:scale-110 transition-transform">
+            <img
+              src="/assets/image5.png"
+              alt="Profile"
+              className="w-full h-full object-contain opacity-80 mix-blend-multiply"
+            />
+          </div>
+        </motion.div>
 
         {/* Bento Item 2: Experience */}
-        <div className="reveal md:col-span-1 bg-slate-900 rounded-[2.5rem] p-8 text-white flex flex-col justify-center items-center text-center hover:bg-blue-600 transition-colors cursor-default">
-          <div className="text-5xl font-black mb-1">3+</div>
+        <motion.div
+          variants={bentoItemVariants}
+          whileHover={{ y: -5, backgroundColor: "#2563eb" }}
+          className="md:col-span-1 bg-slate-900 rounded-xl p-8 text-white flex flex-col justify-center items-center text-center cursor-pointer group"
+        >
+          <motion.div
+            initial={{ scale: 0.5 }}
+            whileInView={{ scale: 1 }}
+            className="text-5xl font-black mb-1 group-hover:scale-110 transition-transform"
+          >
+            3+
+          </motion.div>
           <div className="text-xs font-bold uppercase tracking-widest opacity-60">
             Years of Exp
           </div>
-        </div>
+        </motion.div>
 
         {/* Bento Item 3: Skills Icon */}
-        <div className="reveal md:col-span-1 bg-white rounded-[2.5rem] p-8 border border-slate-100 flex items-center justify-center group">
+        <motion.div
+          variants={bentoItemVariants}
+          className="md:col-span-1 bg-white rounded-xl p-8 border border-slate-100 flex items-center justify-center group"
+        >
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 bg-blue-50 rounded-2xl group-hover:rotate-6 transition-transform">
-              <Globe className="text-blue-600" />
-            </div>
-            <div className="p-3 bg-purple-50 rounded-2xl group-hover:-rotate-12 transition-transform">
-              <Cpu className="text-purple-600" />
-            </div>
-            <div className="p-3 bg-orange-50 rounded-2xl group-hover:-rotate-6 transition-transform">
-              <Layers className="text-orange-600" />
-            </div>
-            <div className="p-3 bg-green-50 rounded-2xl group-hover:rotate-12 transition-transform">
-              <Terminal className="text-green-600" />
-            </div>
+            {[
+              { Icon: Globe, color: "text-blue-600", bg: "bg-blue-50" },
+              { Icon: Cpu, color: "text-purple-600", bg: "bg-purple-50" },
+              { Icon: Layers, color: "text-orange-600", bg: "bg-orange-50" },
+              { Icon: Terminal, color: "text-green-600", bg: "bg-green-50" },
+            ].map(({ Icon, color, bg }, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ rotate: i % 2 === 0 ? 10 : -10, scale: 1.1 }}
+                className={`p-3 ${bg} rounded-xl cursor-pointer`}
+              >
+                <Icon className={color} />
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Bento Item 4: Marquee/List Skills */}
-        <div className="reveal md:col-span-2 bg-[#f0f2f5] rounded-[2.5rem] p-8 overflow-hidden flex flex-col justify-center">
-          <div className="flex flex-wrap gap-2">
+        <motion.div
+          variants={bentoItemVariants}
+          className="md:col-span-2 bg-[#f0f2f5] rounded-xl p-8 overflow-hidden flex flex-col justify-center relative"
+        >
+          <motion.div
+            className="flex flex-wrap gap-2"
+            initial="hidden"
+            whileInView="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.05 } },
+            }}
+          >
             {SKILLS.flatMap((s) => s.items)
               .slice(0, 10)
               .map((skill, i) => (
-                <span
+                <motion.span
                   key={i}
-                  className="px-4 py-2 bg-white rounded-full text-sm font-black shadow-sm border border-slate-100"
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.8 },
+                    visible: { opacity: 1, scale: 1 },
+                  }}
+                  whileHover={{
+                    scale: 1.1,
+                    backgroundColor: "#2563eb",
+                    color: "#fff",
+                  }}
+                  className="px-4 py-2 bg-white rounded-xl text-sm font-black shadow-sm border border-slate-100 cursor-default transition-colors"
                 >
                   {skill}
-                </span>
+                </motion.span>
               ))}
-            <span className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-black">
+            <motion.span
+              whileHover={{ scale: 1.1 }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-black cursor-pointer"
+            >
               Ready to Learn
-            </span>
-          </div>
-        </div>
-      </div>
+            </motion.span>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

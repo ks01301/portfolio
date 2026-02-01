@@ -28,7 +28,7 @@ export default function Header({ scrolled, activeSection }) {
       }`}
     >
       <div
-        className={`flex items-center justify-between px-6 py-3 rounded-2xl border backdrop-blur-xl transition-all ${
+        className={`flex items-center justify-between px-6 py-3 rounded-xl border backdrop-blur-xl transition-all ${
           scrolled
             ? "bg-white/80 border-slate-200 shadow-xl"
             : "bg-white/40 border-transparent shadow-none"
@@ -38,14 +38,14 @@ export default function Header({ scrolled, activeSection }) {
           className="flex items-center gap-2 cursor-pointer group"
           onClick={() => scrollToSection("home", setIsMenuOpen)}
         >
-          <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
+          <div className="w-8 h-8 bg-slate-900 rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform">
             <Sparkles className="text-white w-4 h-4" />
           </div>
           <span className="font-black text-lg tracking-tighter">SEOUL_DEV</span>
         </div>
 
         <div className="hidden md:flex items-center gap-6">
-          {["home", "about", "projects", "contact"].map((item) => (
+          {["home", "about", "stack", "contact"].map((item) => (
             <button
               key={item}
               onClick={() => scrollToSection(item, setIsMenuOpen)}
@@ -70,8 +70,8 @@ export default function Header({ scrolled, activeSection }) {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 w-full bg-white/95 backdrop-blur-2xl border border-slate-100 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in zoom-in-95">
-          {["home", "about", "projects", "contact"].map((item) => (
+        <div className="md:hidden absolute top-16 left-0 w-full bg-white/95 backdrop-blur-2xl border border-slate-100 rounded-xl p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in zoom-in-95">
+          {["home", "about", "stack", "contact"].map((item) => (
             <button
               key={item}
               onClick={() => scrollToSection(item, setIsMenuOpen)}

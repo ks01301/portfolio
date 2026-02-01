@@ -1,53 +1,53 @@
 import React from "react";
-import { Sparkles, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="py-12 border-t border-slate-100 bg-[#fafafa] px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-        <div className="flex flex-col items-center md:items-start gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-slate-900 rounded flex items-center justify-center">
-              <Sparkles className="text-white w-3 h-3" />
-            </div>
-            <span className="font-black text-sm">SEOUL_DEV.PORTFOLIO</span>
-          </div>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
-            Designed with passion for detail
+    <footer className="bg-slate-900 text-slate-300 py-12 px-6 border-t border-slate-800">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6"
+      >
+        <div className="flex flex-col items-center md:items-start gap-2">
+          <span className="font-black text-white tracking-tighter text-xl">
+            SEOUL_DEV
+          </span>
+          <p className="text-sm font-medium text-slate-500">
+            Crafting digital experiences with passion and precision.
           </p>
         </div>
 
-        <div className="flex items-center gap-10">
-          <div className="text-center md:text-right">
-            <div className="text-[10px] font-black uppercase text-slate-300 tracking-widest mb-1">
-              Current Time
-            </div>
-            <div className="text-sm font-bold text-slate-900 tracking-tighter uppercase">
-              Seoul, KR {new Date().getHours()}:{new Date().getMinutes()} PM
-            </div>
-          </div>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="w-12 h-12 border border-slate-200 rounded-full flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all"
-          >
-            <ArrowUpRight className="w-5 h-5 -rotate-90" />
-          </button>
+        <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12 text-sm font-bold tracking-widest uppercase">
+          <a href="#home" className="hover:text-white transition-colors">
+            Main
+          </a>
+          <a href="#about" className="hover:text-white transition-colors">
+            About
+          </a>
+          <a href="#stack" className="hover:text-white transition-colors">
+            Stack
+          </a>
+          <a href="#contact" className="hover:text-white transition-colors">
+            Contact
+          </a>
         </div>
-      </div>
-      <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">
-        <p>© 2024 Gildong Hong - All Rights Reserved</p>
-        <div className="flex gap-6">
-          <button className="hover:text-slate-600 transition-colors">
-            Privacy
-          </button>
-          <button className="hover:text-slate-600 transition-colors">
-            Terms
-          </button>
-          <button className="hover:text-slate-600 transition-colors">
-            Cookies
-          </button>
-        </div>
-      </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.4, duration: 0.8 }}
+        className="max-w-6xl mx-auto mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-600"
+      >
+        <p>&copy; {currentYear} Gildong Hong. All rights reserved.</p>
+        <p>Built with React, Tailwind CSS & Framer Motion</p>
+      </motion.div>
     </footer>
   );
 }
