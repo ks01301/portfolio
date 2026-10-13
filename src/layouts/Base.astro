@@ -1,0 +1,202 @@
+---
+import { profile } from '../data/site';
+
+const { title = `${profile.name} 포트폴리오` } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={profile.description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={profile.description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css"
+    />
+    <script is:inline>
+      (() => {
+        let saved = null;
+        try {
+          saved = localStorage.getItem('theme');
+        } catch {}
+        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --paper: #ffffff;
+    --surface: #f4f6fa;
+    --ink: #172033;
+    --muted: #5b6679;
+    --line: #d5dbe4;
+    --accent: #2b50e8;
+    --accent-soft: #e4e9fd;
+    --ok: #16885a;
+    --warn: #b7791f;
+    --down: #d43d3d;
+
+    --font: 'Wanted Sans Variable', 'Wanted Sans', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
+      'Malgun Gothic', system-ui, sans-serif;
+    --page: 1120px;
+    --gutter: clamp(20px, 5vw, 48px);
+    color-scheme: light;
+  }
+
+  :root[data-theme='dark'] {
+    --paper: #0e1422;
+    --surface: #161e31;
+    --ink: #e8ecf4;
+    --muted: #9aa6bd;
+    --line: #2f3b56;
+    --accent: #8ba4ff;
+    --accent-soft: #24315a;
+    --ok: #4cc38a;
+    --warn: #e2b04a;
+    --down: #ff7a7a;
+    color-scheme: dark;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  ul,
+  ol,
+  dl,
+  dd {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.25em;
+  }
+
+  a:hover {
+    color: var(--accent);
+    text-decoration-color: currentColor;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .skip {
+    position: absolute;
+    left: var(--gutter);
+    top: -100px;
+    z-index: 20;
+    padding: 8px 14px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 8px;
+  }
+
+  .skip:focus {
+    top: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: transparent;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+
+  .btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .btn-solid {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .btn-solid:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  :root[data-theme='dark'] .btn-solid:hover {
+    color: var(--paper);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+</style>
