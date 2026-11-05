@@ -1,745 +1,555 @@
 ---
 import Base from '../layouts/Base.astro';
 import Topology from '../components/Topology.astro';
-import { profile, experience, projects, incidents, skillGroups, levels, timeline } from '../data/site';
+import {
+  profile,
+  summary,
+  experience,
+  skillGroups,
+  levels,
+  projects,
+  pipeline,
+  plan,
+  check,
+  uptime,
+  incidents,
+  timeline,
+} from '../data/site';
+
+const [startYear, startMonth] = uptime.start.split('.').map(Number);
+const months = Array.from({ length: uptime.months }, (_, i) => {
+  const t = startMonth - 1 + i;
+  return `${startYear + Math.floor(t / 12)}.${String((t % 12) + 1).padStart(2, '0')}`;
+});
+const levelLabel = (id: string) => levels.find((l) => l.id === id)?.label ?? '';
 ---
 
 <Base>
   <header class="top">
-    <div class="wrap top-inner">
-      <a class="top-name" href="#main">{profile.name}</a>
-      <nav aria-label="섹션">
-        <a href="#experience">경력</a>
-        <a href="#projects">프로젝트</a>
-        <a href="#incidents">트러블슈팅</a>
+    <div class="wrap top-in">
+      <div class="top-status"><span class="lamp" aria-hidden="true"></span><span>{profile.status}</span></div>
+      <button class="top-mail" type="button" data-copy aria-label="이메일 주소 복사">{profile.email}</button>
+      <nav aria-label="섹션" id="nav">
+        <a href="#topology">구성도</a>
+        <a href="#career">경력</a>
         <a href="#skills">기술</a>
-        <a href="#history">학력</a>
-        <a href="#contact">연락</a>
+        <a href="#projects">프로젝트</a>
+        <a href="#incidents">장애 기록</a>
       </nav>
-      <button class="theme" id="theme" type="button" aria-label="어두운 화면으로 전환">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-          <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"></circle>
-          <path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"></path>
-        </svg>
-      </button>
     </div>
   </header>
 
   <main id="main">
-    <section class="hero wrap">
-      <h1>{profile.headline}</h1>
-      <p class="hero-intro">{profile.intro}</p>
-      <Topology />
-    </section>
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <h1 aria-label={`${profile.titleTop} ${profile.titleBottom}`}>
+            <span aria-hidden="true">{profile.titleTop}</span>
+            <span class="ol" aria-hidden="true">{profile.titleBottom}</span>
+          </h1>
+          <p class="hero-hi">{profile.greeting}</p>
+          <p class="hero-lead">{profile.intro}</p>
+          <div class="hero-acts">
+            <a class="btn btn-pri" href="#career">경력 보기</a>
+            <a class="btn" href="#contact">연락하기</a>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="pc pc-resume" aria-hidden="true">
+            <b>이력서</b>{profile.name}
+            <i style="width:82%"></i><i style="width:60%"></i><i style="width:74%"></i><i style="width:48%"></i>
+          </div>
+          <div class="pc pc-term" aria-hidden="true">
+            {`$ kubectl get nodes\nnode-1  Ready  control-plane\nnode-2  Ready  control-plane\nnode-3  Ready  control-plane`}
+          </div>
+          <div class="pc pc-state">
+            <b><span class="lamp" aria-hidden="true"></span><span id="hero-state">전체 정상</span></b>
+            <p id="hero-detail">요청이 두 앱 인스턴스로 번갈아 전달됩니다.</p>
+            <a href="#topology">구성도에서 내려 보기</a>
+          </div>
+        </div>
+      </section>
 
-    <section class="block wrap" id="experience" aria-labelledby="experience-h">
-      <div class="block-head">
-        <h2 id="experience-h">경력</h2>
-      </div>
-      <ol class="jobs">
+      <section class="sum" aria-label="경력 요약">
         {
-          experience.map((e) => (
-            <li class="job">
-              <div class="job-head">
-                <h3>{e.company}</h3>
-                <span class="job-role">{e.role}</span>
-                <span class="job-period">{e.period}</span>
-              </div>
-              <p class="job-summary">{e.summary}</p>
-              <ul class="bullets">
-                {e.work.map((w) => (
-                  <li>{w}</li>
-                ))}
-              </ul>
-              <p class="job-stack">{e.stack.join(', ')}</p>
-            </li>
+          summary.map((s) => (
+            <div>
+              <div class="sum-num">{s.value}</div>
+              <h2>{s.label}</h2>
+              <p>{s.detail}</p>
+            </div>
           ))
         }
-      </ol>
-    </section>
+      </section>
 
-    <section class="block wrap" id="projects" aria-labelledby="projects-h">
-      <div class="block-head">
-        <h2 id="projects-h">프로젝트</h2>
-        <p>제목을 누르면 문제와 한 일, 결과가 펼쳐집니다.</p>
-      </div>
-      <div class="rows">
-        {
-          projects.map((p) => (
-            <details class="row" id={`project-${p.id}`}>
-              <summary>
-                <span class="row-title">{p.title}</span>
-                <span class="row-summary">{p.summary}</span>
-                <span class="row-meta">{p.period}</span>
-                <span class="row-mark" aria-hidden="true" />
-              </summary>
-              <div class="row-body">
-                <dl>
-                  <dt>문제</dt>
-                  <dd>{p.problem}</dd>
-                  <dt>한 일</dt>
-                  <dd>
-                    <ul class="bullets">
-                      {p.work.map((w) => (
-                        <li>{w}</li>
-                      ))}
-                    </ul>
-                  </dd>
-                  <dt>결과</dt>
-                  <dd>{p.result}</dd>
-                  <dt>사용 기술</dt>
-                  <dd>{p.stack.join(', ')}</dd>
-                </dl>
-                <a href={p.link} target="_blank" rel="noreferrer">
-                  저장소 보기
-                </a>
-              </div>
-            </details>
-          ))
-        }
-      </div>
-    </section>
+      <section class="sec" id="topology">
+        <div class="sh">
+          <small>서비스 구성도</small>
+          <h2>제가 운영하는 구조입니다.<br />노드를 내려 직접 확인해 보세요.</h2>
+        </div>
+        <Topology />
+      </section>
 
-    <section class="block wrap" id="incidents" aria-labelledby="incidents-h">
-      <div class="block-head">
-        <h2 id="incidents-h">트러블슈팅 기록</h2>
-        <p>직접 겪은 장애와 다시 일어나지 않도록 바꾼 것들입니다.</p>
-      </div>
-      <div class="rows">
-        {
-          incidents.map((i) => (
-            <details class="row">
-              <summary>
-                <span class="row-title">{i.title}</span>
-                <span class="row-summary">{i.duration}</span>
-                <span class="row-meta">{i.date}</span>
-                <span class="row-mark" aria-hidden="true" />
-              </summary>
-              <div class="row-body">
-                <dl>
-                  <dt>원인</dt>
-                  <dd>{i.cause}</dd>
-                  <dt>조치</dt>
-                  <dd>{i.fix}</dd>
-                  <dt>재발 방지</dt>
-                  <dd>{i.prevent}</dd>
-                </dl>
-              </div>
-            </details>
-          ))
-        }
-      </div>
-    </section>
+      <section class="sec" id="career">
+        <div class="sh">
+          <small>경력</small>
+          <h2>사람이 반복하던 일을 줄이는 데<br />시간을 많이 썼습니다.</h2>
+        </div>
+        <div class="tl">
+          {
+            experience.map((j) => (
+              <article class="job">
+                <h3>
+                  {j.company}
+                  <span class="badge">{j.badge}</span>
+                </h3>
+                <p class="job-team">{j.team}</p>
+                <time>{j.period}</time>
+                <p class="job-summary">{j.summary}</p>
+                <details open={j.open}>
+                  <summary>주요 업무 보기</summary>
+                  <ul class="dots">
+                    {j.work.map((w) => (
+                      <li>{w}</li>
+                    ))}
+                  </ul>
+                </details>
+                <ul class="chips">
+                  {j.stack.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+    </div>
 
-    <section class="block wrap" id="skills" aria-labelledby="skills-h">
-      <div class="block-head">
-        <h2 id="skills-h">기술</h2>
-        <p>숙련도를 고르면 해당하는 기술만 남습니다.</p>
-        <div class="filters" role="group" aria-label="숙련도로 걸러 보기">
+    <section class="band" id="skills">
+      <div class="wrap">
+        <div class="sh">
+          <small>기술</small>
+          <h2>분야별로 어디까지 해 봤는지 나눴습니다.</h2>
+          <p>기술을 누르면 어디에 썼는지 나옵니다.</p>
+        </div>
+        <div class="legend" id="sk-filter" role="group" aria-label="숙련도로 걸러 보기">
           {
             levels.map((l) => (
-              <button type="button" class="filter" data-level={l.id} aria-pressed="false">
-                <span class="dot" data-level={l.id} aria-hidden="true" />
+              <button
+                type="button"
+                data-filter={l.id}
+                aria-pressed="false"
+              >
+                <i style={`background:${l.id === 'run' ? 'var(--fill)' : l.id === 'used' ? 'var(--sysbg)' : '#fff'}`} />
                 {l.label}
               </button>
             ))
           }
         </div>
-      </div>
-      <div class="skills" id="skill-list">
-        {
-          skillGroups.map((g) => (
-            <div class="skill-group">
-              <h3>{g.name}</h3>
-              <ul>
-                {g.skills.map((s) => (
-                  <li data-level={s.level}>
-                    <span class="dot" data-level={s.level} aria-hidden="true" />
-                    {s.name}
-                    <span class="sr">({levels.find((l) => l.id === s.level)?.label})</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
+        <div class="skills" id="sk-list">
+          {
+            skillGroups.map((g) => (
+              <div class="sk-row">
+                <div>
+                  <b>{g.name}</b>
+                  <span class="d">{g.desc}</span>
+                </div>
+                <div class="sk-list">
+                  {g.skills.map((s) => (
+                    <button
+                      type="button"
+                      class="sk"
+                      data-level={s.level}
+                      data-name={s.name}
+                      data-label={levelLabel(s.level)}
+                      data-used={s.used ?? ''}
+                      data-project={s.project ?? ''}
+                      aria-pressed="false"
+                    >
+                      {s.name}
+                      <span class="sr">({levelLabel(s.level)})</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+        <div class="sk-detail" id="sk-detail" aria-live="polite">기술을 하나 눌러 보세요.</div>
       </div>
     </section>
 
-    <section class="block wrap" id="history" aria-labelledby="history-h">
-      <div class="block-head">
-        <h2 id="history-h">학력과 자격증</h2>
-      </div>
-      <ol class="timeline">
-        {
-          timeline.map((t) => (
-            <li>
-              <time>{t.when}</time>
-              <span class="timeline-what">{t.what}</span>
-              <span class="timeline-where">{t.where}</span>
-            </li>
-          ))
-        }
-      </ol>
-    </section>
+    <div class="wrap">
+      <section class="sec" id="projects">
+        <div class="sh">
+          <small>프로젝트</small>
+          <h2>문제를 어떻게 풀었는지 보여 드립니다.</h2>
+          <p>카드 안의 버튼은 눌러 볼 수 있습니다.</p>
+        </div>
+        <div class="cards">
+          {
+            projects.map((p) => (
+              <article class="card" id={`project-${p.id}`}>
+                <div class="prev">
+                  {p.demo === 'pipeline' && (
+                    <div class="win">
+                      <header>
+                        <span>{pipeline.file}</span>
+                        <button class="mini" type="button" id="run-deploy">배포 실행</button>
+                      </header>
+                      <div class="win-body" aria-live="polite">
+                        {pipeline.steps.map((s) => (
+                          <div class="step is-wait">
+                            <span>{s}</span>
+                            <span>대기</span>
+                          </div>
+                        ))}
+                        <div class="win-result">
+                          {pipeline.results.map((r) => (
+                            <div>{r}</div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {p.demo === 'plan' && (
+                    <div class="win">
+                      <header>
+                        <span>terraform plan</span>
+                        <button class="mini" type="button" id="run-plan">운영 환경 보기</button>
+                      </header>
+                      <div class="win-body" id="plan-body" aria-live="polite" />
+                    </div>
+                  )}
+                  {p.demo === 'uptime' && (
+                    <div class="win">
+                      <header>
+                        <span>가동 기록, {uptime.months}개월</span>
+                      </header>
+                      <div class="win-body">
+                        <div class="up" id="uptime">
+                          {months.map((m) => {
+                            const hit = incidents.findIndex((i) => i.date === m);
+                            return (
+                              <button
+                                type="button"
+                                class={hit >= 0 ? 'is-bad' : ''}
+                                data-month={m}
+                                data-incident={hit >= 0 ? hit : undefined}
+                                aria-label={`${m}, ${hit >= 0 ? incidents[hit].title : '이상 없음'}`}
+                              />
+                            );
+                          })}
+                        </div>
+                        <div class="up-axis">
+                          <span>{months[0]}</span>
+                          <span>{months[months.length - 1]}</span>
+                        </div>
+                        <div class="up-detail" id="uptime-detail" aria-live="polite">빨간 달을 누르면 그때 있었던 일이 나옵니다.</div>
+                      </div>
+                    </div>
+                  )}
+                  {p.demo === 'check' && (
+                    <div class="win">
+                      <header>
+                        <span>{check.command}</span>
+                        <button class="mini" type="button" id="run-check">점검 실행</button>
+                      </header>
+                      <div class="win-body" id="check-body" aria-live="polite">
+                        <span class="cm">점검 실행을 누르면 결과가 나옵니다.</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <h3>{p.title}</h3>
+                <p class="card-period">{p.period}</p>
+                <p class="card-summary">{p.summary}</p>
+                <details>
+                  <summary>문제와 한 일 보기</summary>
+                  <div class="card-body">
+                    <div>
+                      <b>문제</b>
+                      {p.problem}
+                    </div>
+                    <div>
+                      <b>한 일</b>
+                      <ul class="dots">
+                        {p.work.map((w) => (
+                          <li>{w}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <b>사용 기술</b>
+                      {p.stack.join(', ')}
+                    </div>
+                    <a href={p.link} target="_blank" rel="noreferrer">저장소 보기</a>
+                  </div>
+                </details>
+              </article>
+            ))
+          }
+        </div>
+      </section>
 
-    <section class="contact wrap" id="contact" aria-labelledby="contact-h">
-      <h2 id="contact-h">같이 일할 팀을 찾고 있습니다</h2>
-      <p>메일을 주시면 하루 안에 답장합니다.</p>
-      <div class="contact-actions">
-        <button class="btn btn-solid" id="copy-email" type="button" data-email={profile.email}>이메일 주소 복사</button>
-        <a class="btn" href={profile.resume}>이력서 PDF 받기</a>
-        <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
-        <a href={profile.blog} target="_blank" rel="noreferrer">블로그</a>
+      <section class="sec" id="incidents">
+        <div class="sh">
+          <small>장애 기록</small>
+          <h2>직접 겪은 장애와 그 뒤에 바꾼 것들입니다.</h2>
+        </div>
+        <div class="tile inc">
+          <div class="inc-list" id="inc-list">
+            {
+              incidents.map((v, i) => (
+                <button type="button" data-index={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+                  <b>{v.title}</b>
+                  <small>{v.date}</small>
+                </button>
+              ))
+            }
+          </div>
+          <div class="inc-view">
+            <p class="inc-dur" id="inc-dur"></p>
+            <div class="steps" id="inc-steps"></div>
+            <p class="inc-text" id="inc-text" aria-live="polite"></p>
+            <button class="btn btn-sm" type="button" id="inc-next">다음</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="history">
+        <div class="sh">
+          <small>소개</small>
+          <h2>학력과 자격증</h2>
+        </div>
+        <div class="ab">
+          <div class="photo">
+            {profile.photo ? <img src={profile.photo} alt={`${profile.name} 사진`} /> : <span>프로필 사진 자리</span>}
+          </div>
+          <ol class="hist">
+            {
+              timeline.map((t) => (
+                <li>
+                  <time>{t.when}</time>
+                  <span>
+                    {t.what}
+                    <small>{t.where}</small>
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <section class="con" id="contact">
+      <div class="wrap">
+        <h2>같이 일할 팀을 찾고 있습니다</h2>
+        <p>메일을 주시면 하루 안에 답장합니다.</p>
+        <div class="con-acts">
+          <button class="btn" type="button" data-copy>이메일 주소 복사</button>
+          <a class="btn" href={profile.resume}>이력서 PDF</a>
+          <a class="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub</a>
+          <a class="btn" href={profile.blog} target="_blank" rel="noreferrer">블로그</a>
+        </div>
+        <p class="con-mail">{profile.email}</p>
       </div>
-      <p class="contact-email">{profile.email}</p>
     </section>
   </main>
 
-  <footer class="wrap foot">
-    <p>© {new Date().getFullYear()} {profile.name}</p>
+  <footer class="foot">
+    <div class="wrap">© {new Date().getFullYear()} {profile.name}</div>
   </footer>
 </Base>
 
 <script>
-  const root = document.documentElement;
+  import { profile, plan, check, incidents, incidentSteps } from '../data/site';
 
-  // 화면 모드
-  const themeBtn = document.getElementById('theme')!;
-  const label = () =>
-    themeBtn.setAttribute('aria-label', root.dataset.theme === 'dark' ? '밝은 화면으로 전환' : '어두운 화면으로 전환');
-  label();
-  themeBtn.addEventListener('click', () => {
-    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    try {
-      localStorage.setItem('theme', root.dataset.theme);
-    } catch {}
-    label();
+  const $ = (id: string) => document.getElementById(id)!;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 상단 메뉴 현재 위치
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('#nav a')];
+  const targets = links.map((a) => document.querySelector(a.getAttribute('href')!));
+  const spy = () => {
+    let current = -1;
+    targets.forEach((s, i) => {
+      if (s && s.getBoundingClientRect().top < 200) current = i;
+    });
+    links.forEach((a, i) => a.classList.toggle('on', i === current));
+  };
+  addEventListener('scroll', spy, { passive: true });
+  spy();
+
+  // 이메일 복사
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+    const original = b.textContent!;
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(profile.email);
+        b.textContent = '복사했습니다';
+      } catch {
+        b.textContent = '주소를 직접 선택해 주세요';
+      }
+      setTimeout(() => (b.textContent = original), 1800);
+    });
   });
 
-  // 기술 필터
-  const list = document.getElementById('skill-list')!;
-  const filters = [...document.querySelectorAll<HTMLButtonElement>('.filter')];
-  for (const btn of filters) {
-    btn.addEventListener('click', () => {
-      const on = btn.getAttribute('aria-pressed') !== 'true';
-      filters.forEach((b) => b.setAttribute('aria-pressed', String(on && b === btn)));
-      if (on) list.dataset.filter = btn.dataset.level;
-      else delete list.dataset.filter;
+  // 기술 필터와 설명
+  const skills = [...document.querySelectorAll<HTMLButtonElement>('.sk')];
+  const filters = [...document.querySelectorAll<HTMLButtonElement>('#sk-filter button')];
+  for (const b of filters) {
+    b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      filters.forEach((x) => x.setAttribute('aria-pressed', String(on && x === b)));
+      skills.forEach((s) => s.classList.toggle('is-dim', on && s.dataset.level !== b.dataset.filter));
+    });
+  }
+  for (const b of skills) {
+    b.addEventListener('click', () => {
+      skills.forEach((s) => s.setAttribute('aria-pressed', String(s === b)));
+      const { name, label, used, project, level } = b.dataset;
+      const text = used ? `${used}.` : level === 'learning' ? '지금 공부하고 있습니다.' : '';
+      $('sk-detail').innerHTML = `<b>${name}</b>, ${label}. ${text}${project ? ` <a href="#project-${project}">프로젝트 보기</a>` : ''}`;
     });
   }
 
-  // 이메일 복사
-  const copy = document.getElementById('copy-email') as HTMLButtonElement;
-  const original = copy.textContent!;
-  copy.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(copy.dataset.email!);
-      copy.textContent = '복사했습니다';
-    } catch {
-      copy.textContent = '복사하지 못했습니다. 아래 주소를 직접 선택해 주세요';
-    }
-    setTimeout(() => (copy.textContent = original), 2200);
+  // 배포 데모
+  const runDeploy = $('run-deploy');
+  let deployTimers: number[] = [];
+  runDeploy.addEventListener('click', () => {
+    deployTimers.forEach(clearTimeout);
+    deployTimers = [];
+    const steps = [...runDeploy.closest('.win')!.querySelectorAll<HTMLElement>('.step')];
+    steps.forEach((el) => {
+      el.className = 'step is-wait';
+      el.lastElementChild!.textContent = '대기';
+    });
+    const gap = reduce ? 0 : 650;
+    steps.forEach((el, i) => {
+      deployTimers.push(
+        window.setTimeout(() => {
+          el.classList.remove('is-wait');
+          el.lastElementChild!.textContent = '실행 중';
+        }, i * gap),
+      );
+      deployTimers.push(
+        window.setTimeout(() => {
+          el.classList.add('is-done');
+          el.lastElementChild!.textContent = '완료';
+        }, reduce ? 0 : (i + 1) * gap - 40),
+      );
+    });
   });
 
-  // 주소에 #project-…가 붙어 들어오면 해당 항목을 펼친다
-  const openFromHash = () => {
-    const el = location.hash ? document.querySelector(location.hash) : null;
-    if (el instanceof HTMLDetailsElement) el.open = true;
+  // Terraform 데모
+  let env = 0;
+  const showPlan = () => {
+    const body = $('plan-body');
+    body.textContent = '';
+    for (const line of plan.envs[env].lines) {
+      const d = document.createElement('div');
+      d.className = 'pre';
+      if (line.startsWith('+')) {
+        const [name, ...rest] = line.split('  ');
+        const s = document.createElement('span');
+        s.className = 'add';
+        s.textContent = name;
+        d.append(s, rest.length ? `  ${rest.join('  ')}` : '');
+      } else {
+        d.textContent = line;
+      }
+      body.append(d);
+    }
+    const t = document.createElement('div');
+    t.className = 'cm';
+    t.textContent = plan.total;
+    body.append(t);
+    $('run-plan').textContent = `${plan.envs[(env + 1) % plan.envs.length].name} 환경 보기`;
   };
-  openFromHash();
-  addEventListener('hashchange', openFromHash);
+  showPlan();
+  $('run-plan').addEventListener('click', () => {
+    env = (env + 1) % plan.envs.length;
+    showPlan();
+  });
+
+  // 서버 점검 데모
+  let checkTimers: number[] = [];
+  $('run-check').addEventListener('click', () => {
+    checkTimers.forEach(clearTimeout);
+    checkTimers = [];
+    const body = $('check-body');
+    body.textContent = '';
+    const lines = [
+      { text: check.header, cls: 'pre' },
+      ...check.rows.map((r) => ({ text: r.line, cls: r.warn ? 'pre warn' : 'pre' })),
+      { text: check.total, cls: 'cm' },
+    ];
+    lines.forEach((l, i) => {
+      checkTimers.push(
+        window.setTimeout(() => {
+          const d = document.createElement('div');
+          d.className = l.cls;
+          d.textContent = l.text;
+          body.append(d);
+        }, reduce ? 0 : i * 170),
+      );
+    });
+  });
+
+  // 장애 기록
+  let inc = 0;
+  let step = 0;
+  const showIncident = () => {
+    const x = incidents[inc];
+    document
+      .querySelectorAll('#inc-list button')
+      .forEach((b, i) => b.setAttribute('aria-pressed', String(i === inc)));
+    $('inc-dur').textContent = x.duration;
+    $('inc-steps').innerHTML = incidentSteps
+      .map((l, i) => `<button type="button" class="stp" data-step="${i}" aria-current="${i <= step}">${l}</button>`)
+      .join('');
+    $('inc-text').textContent = x.steps[step];
+    $('inc-next').textContent = step === incidentSteps.length - 1 ? '처음으로' : `다음: ${incidentSteps[step + 1]}`;
+  };
+  $('inc-list').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-index]');
+    if (!b) return;
+    inc = Number(b.dataset.index);
+    step = 0;
+    showIncident();
+  });
+  $('inc-steps').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-step]');
+    if (!b) return;
+    step = Number(b.dataset.step);
+    showIncident();
+  });
+  $('inc-next').addEventListener('click', () => {
+    step = (step + 1) % incidentSteps.length;
+    showIncident();
+  });
+  showIncident();
+
+  // 가동 기록
+  const upDetail = $('uptime-detail');
+  $('uptime').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('button');
+    if (!b) return;
+    if (b.dataset.incident === undefined) {
+      upDetail.textContent = `${b.dataset.month}, 계획에 없던 중단 없음.`;
+      return;
+    }
+    const i = Number(b.dataset.incident);
+    upDetail.innerHTML = `${incidents[i].date}, ${incidents[i].title}. <a href="#incidents" data-open="${i}">장애 기록 보기</a>`;
+  });
+  upDetail.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest<HTMLElement>('[data-open]');
+    if (!a) return;
+    inc = Number(a.dataset.open);
+    step = 0;
+    showIncident();
+  });
 </script>
-
-<style>
-  .wrap {
-    width: 100%;
-    max-width: calc(var(--page) + var(--gutter) * 2);
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-  }
-
-  .sr {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  /* ── 상단 ── */
-  .top {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: color-mix(in srgb, var(--paper) 86%, transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .top-inner {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    height: 60px;
-  }
-
-  .top-name {
-    font-weight: 700;
-    text-decoration: none;
-    letter-spacing: -0.01em;
-  }
-
-  .top nav {
-    display: flex;
-    gap: clamp(14px, 2.4vw, 28px);
-    margin-left: auto;
-    font-size: 0.9375rem;
-  }
-
-  .top nav a {
-    color: var(--muted);
-    text-decoration: none;
-  }
-
-  .top nav a:hover {
-    color: var(--ink);
-  }
-
-  .theme {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-  }
-
-  .theme:hover {
-    background: var(--line);
-  }
-
-  /* ── 첫 화면 ── */
-  .hero {
-    padding-top: clamp(48px, 9vw, 104px);
-    padding-bottom: clamp(56px, 8vw, 96px);
-  }
-
-  .hero h1 {
-    max-width: 14em;
-    font-size: clamp(2.25rem, 6.2vw, 4.5rem);
-    font-weight: 750;
-    line-height: 1.14;
-    letter-spacing: -0.035em;
-  }
-
-  .hero-intro {
-    max-width: 38em;
-    margin-top: 24px;
-    margin-bottom: clamp(36px, 5vw, 56px);
-    font-size: 1.125rem;
-    color: var(--muted);
-  }
-
-  /* ── 섹션 공통 ── */
-  .block {
-    display: grid;
-    grid-template-columns: 260px minmax(0, 1fr);
-    gap: 24px 56px;
-    padding-block: clamp(48px, 7vw, 88px);
-    border-top: 1px solid var(--line);
-  }
-
-  .block-head {
-    align-self: start;
-    position: sticky;
-    top: 92px;
-  }
-
-  .block-head h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.3;
-  }
-
-  .block-head p {
-    margin-top: 8px;
-    color: var(--muted);
-    font-size: 0.9375rem;
-  }
-
-  /* ── 경력 ── */
-  .jobs {
-    border-top: 1.5px solid var(--ink);
-  }
-
-  .job {
-    padding: 24px 4px 28px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .job-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 2px 14px;
-  }
-
-  .job-head h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.4;
-  }
-
-  .job-role {
-    font-weight: 600;
-  }
-
-  .job-period {
-    margin-left: auto;
-    color: var(--muted);
-    font-size: 0.9375rem;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .job-summary {
-    max-width: 44em;
-    margin-top: 6px;
-    margin-bottom: 14px;
-    color: var(--muted);
-  }
-
-  .job .bullets {
-    max-width: 44em;
-  }
-
-  .job-stack {
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 0.9375rem;
-  }
-
-  /* ── 펼치는 행 ── */
-  .rows {
-    border-top: 1.5px solid var(--ink);
-  }
-
-  .row {
-    border-bottom: 1px solid var(--line);
-    scroll-margin-top: 80px;
-  }
-
-  .row summary {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto 20px;
-    grid-template-areas:
-      'title meta mark'
-      'summary summary .';
-    gap: 4px 20px;
-    align-items: baseline;
-    padding: 22px 4px;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .row summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .row-title {
-    grid-area: title;
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.4;
-  }
-
-  .row summary:hover .row-title {
-    color: var(--accent);
-  }
-
-  .row-summary {
-    grid-area: summary;
-    color: var(--muted);
-  }
-
-  .row-meta {
-    grid-area: meta;
-    color: var(--muted);
-    font-size: 0.9375rem;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .row-mark {
-    grid-area: mark;
-    align-self: center;
-    position: relative;
-    width: 14px;
-    height: 14px;
-    justify-self: end;
-  }
-
-  .row-mark::before,
-  .row-mark::after {
-    content: '';
-    position: absolute;
-    inset: 6px 0 auto;
-    height: 2px;
-    background: currentColor;
-    transition: transform 0.2s;
-  }
-
-  .row-mark::after {
-    transform: rotate(90deg);
-  }
-
-  .row[open] .row-mark::after {
-    transform: rotate(0deg);
-  }
-
-  .row-body {
-    padding: 4px 4px 28px;
-  }
-
-  .row-body dl {
-    display: grid;
-    grid-template-columns: 88px minmax(0, 1fr);
-    gap: 12px 20px;
-    max-width: 44em;
-  }
-
-  .row-body dt {
-    color: var(--muted);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    padding-top: 0.08em;
-  }
-
-  .row-body > a {
-    display: inline-block;
-    margin-top: 18px;
-    margin-left: 108px;
-    font-weight: 600;
-  }
-
-  .bullets li {
-    position: relative;
-    padding-left: 16px;
-  }
-
-  .bullets li + li {
-    margin-top: 4px;
-  }
-
-  .bullets li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.78em;
-    width: 6px;
-    height: 2px;
-    background: var(--muted);
-  }
-
-  /* ── 기술 ── */
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 18px;
-  }
-
-  .filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 38px;
-    padding: 0 14px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--surface);
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-
-  .filter:hover {
-    border-color: var(--muted);
-  }
-
-  .filter[aria-pressed='true'] {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .dot {
-    flex: none;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid currentColor;
-  }
-
-  .dot[data-level='run'] {
-    background: currentColor;
-  }
-
-  .dot[data-level='used'] {
-    background: linear-gradient(90deg, currentColor 50%, transparent 50%);
-  }
-
-  .skills {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 36px 32px;
-  }
-
-  .skill-group h3 {
-    padding-bottom: 10px;
-    border-bottom: 1.5px solid var(--ink);
-    font-size: 1rem;
-    font-weight: 700;
-  }
-
-  .skill-group li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--line);
-    transition: opacity 0.2s;
-  }
-
-  .skill-group .dot {
-    color: var(--accent);
-  }
-
-  .skills[data-filter='run'] li:not([data-level='run']),
-  .skills[data-filter='used'] li:not([data-level='used']),
-  .skills[data-filter='learning'] li:not([data-level='learning']) {
-    opacity: 0.22;
-  }
-
-  /* ── 이력 ── */
-  .timeline {
-    border-top: 1.5px solid var(--ink);
-  }
-
-  .timeline li {
-    display: grid;
-    grid-template-columns: 96px minmax(0, 1fr) auto;
-    gap: 4px 20px;
-    align-items: baseline;
-    padding: 16px 4px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .timeline time,
-  .timeline-where {
-    color: var(--muted);
-    font-size: 0.9375rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .timeline-what {
-    font-weight: 600;
-  }
-
-  /* ── 연락 ── */
-  .contact {
-    padding-block: clamp(64px, 10vw, 128px);
-    border-top: 1px solid var(--line);
-  }
-
-  .contact h2 {
-    max-width: 14em;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 750;
-    line-height: 1.18;
-    letter-spacing: -0.035em;
-  }
-
-  .contact > p {
-    max-width: 36em;
-    margin-top: 20px;
-    color: var(--muted);
-    font-size: 1.125rem;
-  }
-
-  .contact-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 20px;
-    margin-top: 32px;
-  }
-
-  .contact > .contact-email {
-    margin-top: 16px;
-    font-size: 0.9375rem;
-    user-select: all;
-  }
-
-  .foot {
-    padding-block: 28px;
-    border-top: 1px solid var(--line);
-    color: var(--muted);
-    font-size: 0.875rem;
-  }
-
-  @media (max-width: 880px) {
-    .block {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .block-head {
-      position: static;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .top nav a:nth-child(n + 4) {
-      display: none;
-    }
-
-    .job-period {
-      margin-left: 0;
-      flex-basis: 100%;
-    }
-
-    .row summary {
-      grid-template-areas:
-        'title mark'
-        'summary .'
-        'meta .';
-      grid-template-columns: minmax(0, 1fr) 20px;
-    }
-
-    .row-body dl {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 2px;
-    }
-
-    .row-body dd + dt {
-      margin-top: 14px;
-    }
-
-    .row-body > a {
-      margin-left: 0;
-    }
-
-    .timeline li {
-      grid-template-columns: 76px minmax(0, 1fr);
-    }
-
-    .timeline-where {
-      grid-column: 2;
-    }
-  }
-</style>
