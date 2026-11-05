@@ -7,7 +7,7 @@ export const profile = {
   titleBottom: 'PORTFOLIO',
   greeting: '안녕하세요, 김강산입니다.',
   intro:
-    '9년 동안 서버와 네트워크 운영, 솔루션 기술지원, 웹 서비스 개발을 맡아 왔습니다. 지금은 Proxmox 서버 5대에 VM 27대를 구성해 운영하면서, Go와 React로 파일 관리 서비스를 만들고 있습니다. 내일이 아닌 1년 뒤, 10년 뒤를 바라보고 일합니다.',
+    '9년 동안 서버와 네트워크 운영, 솔루션 기술지원, 웹 서비스 개발을 맡아 왔습니다. 요즘은 서비스를 직접 개발하고, 배포와 운영까지 이어서 맡고 있습니다. 내일이 아닌 1년 뒤, 10년 뒤를 바라보고 일합니다.',
   careerYears: '총 9년',
   email: 'kks01301@naver.com',
   location: '서울',
@@ -20,7 +20,7 @@ export const profile = {
 export const focus = [
   {
     title: '서비스 개발',
-    body: 'Go와 React로 파일 관리 서비스를, NestJS와 Flutter로 AI 입찰 공고 분석 서비스를 만들었습니다. IBM Aspera 연동과 기술지원도 맡고 있습니다.',
+    body: 'Go와 React로 파일 관리 서비스를, NestJS와 Flutter로 AI 입찰 공고 분석 서비스를 혼자 만들었습니다. IBM Aspera 연동과 기술지원도 맡고 있습니다.',
     link: '대표 프로젝트 보기',
     href: '#project-files',
   },
@@ -31,8 +31,8 @@ export const focus = [
     href: '#ci',
   },
   {
-    title: '가상화와 Kubernetes',
-    body: 'Proxmox 서버 5대에 VM 27대를 구성했습니다. Talos Kubernetes 클러스터는 Argo CD로 GitOps 방식으로 관리합니다.',
+    title: '가상화와 서버 운영',
+    body: 'Proxmox로 사내 가상화 환경을 만들고 Pacemaker로 서버와 서비스 HA를 구성했습니다. 남는 자원을 활용해 테스트 환경도 운영합니다.',
     link: '인프라 구성도 보기',
     href: '#infra',
   },
@@ -245,8 +245,10 @@ export const experience = [
     period: '2019.12 – 현재',
     summary: '시스템 운영 및 관리(서버, 네트워크 등), 솔루션 기술지원(IBM Aspera 등), 웹 서비스 개발 및 솔루션 연동을 맡고 있습니다.',
     work: [
+      '퍼니플럭스 전산실 운영: 전사 PC, 네트워크, 서버, 보안 관리',
       'Go, React 기반 파일 관리 서비스 개발',
       'NestJS, React, Flutter 기반 AI 입찰 공고 분석 서비스 개발',
+      '회사 웹사이트와 스토리지 기업 웹사이트 제작',
       'IBM Aspera Third-Party 웹 서비스 개발',
       'IBM Aspera 기술지원(쿠팡플레이, 퍼니플럭스, 대우건설, 아리랑TV 등)',
       'Proxmox, Docker 등 사내 가상화 환경 도입으로 잉여 자원 활용 및 테스트 환경 구축',
@@ -276,79 +278,75 @@ export const experience = [
 ];
 
 // ── 기술 ────────────────────────────────────────────────
-// level: run = 직접 운영, used = 업무에 사용
 // used: 기술을 눌렀을 때 나오는 설명, project: 연결할 프로젝트 id
-
-export const levels = [
-  { id: 'run', label: '직접 구축과 개발' },
-  { id: 'used', label: '업무에 사용' },
-] as const;
 
 export type Skill = {
   name: string;
-  level: 'run' | 'used';
   used?: string;
   project?: string;
 };
+
+// 기술 섹션 맨 위에 묶어 보여 줄 주력 기술입니다. 아래 목록에 있는 이름을 적습니다.
+export const mainSkills = ['Go', 'React', 'TypeScript', 'PostgreSQL', 'Docker', 'Kubernetes', 'Proxmox', 'GitHub Actions'];
 
 export const skillGroups: { name: string; desc: string; skills: Skill[] }[] = [
   {
     name: '개발',
     desc: '화면부터 API 서버까지 웹 서비스를 개발하고 솔루션과 연동합니다.',
     skills: [
-      { name: 'Go', level: 'run', used: 'API 서버와 리눅스 에이전트 개발', project: 'files' },
-      { name: 'Gin', level: 'run', used: 'API 서버 개발', project: 'files' },
-      { name: 'React', level: 'run', used: '서비스 화면 개발', project: 'files' },
-      { name: 'TypeScript', level: 'run', used: '서비스 화면과 API 호출 코드', project: 'files' },
-      { name: 'PostgreSQL', level: 'run', used: '서비스 데이터베이스, GORM 사용', project: 'files' },
-      { name: 'OpenAPI', level: 'run', used: 'API 계약을 기준으로 서버와 화면 코드 생성', project: 'files' },
-      { name: 'NestJS', level: 'run', used: 'API 서버와 백그라운드 작업 개발', project: 'bid' },
-      { name: 'tRPC', level: 'run', used: '웹과 서버 사이의 API', project: 'bid' },
-      { name: 'Prisma', level: 'run', used: 'PostgreSQL 모델 관리', project: 'bid' },
-      { name: 'pgvector', level: 'run', used: '입찰 공고 후보 검색', project: 'bid' },
-      { name: 'Flutter', level: 'run', used: '모바일 앱 개발', project: 'bid' },
-      { name: 'AI API 연동', level: 'run', used: '로컬 AI 에이전트와 OpenAI 호환 API로 공고 분석', project: 'bid' },
-      { name: 'JavaScript', level: 'used', used: '웹 서비스 개발' },
-      { name: 'Node.js', level: 'used', used: '웹 서비스 개발' },
-      { name: 'IBM Aspera', level: 'run', used: 'Third-Party 웹 서비스 개발, 솔루션 연동, 쿠팡플레이, 퍼니플럭스, 대우건설, 아리랑TV 등 기술지원', project: 'aspera' },
+      { name: 'Go', used: 'API 서버와 리눅스 에이전트 개발', project: 'files' },
+      { name: 'Gin', used: 'API 서버 개발', project: 'files' },
+      { name: 'React', used: '서비스 화면 개발', project: 'files' },
+      { name: 'TypeScript', used: '서비스 화면과 API 호출 코드', project: 'files' },
+      { name: 'PostgreSQL', used: '서비스 데이터베이스, GORM 사용', project: 'files' },
+      { name: 'OpenAPI', used: 'API 계약을 기준으로 서버와 화면 코드 생성', project: 'files' },
+      { name: 'NestJS', used: 'API 서버와 백그라운드 작업 개발', project: 'bid' },
+      { name: 'tRPC', used: '웹과 서버 사이의 API', project: 'bid' },
+      { name: 'Prisma', used: 'PostgreSQL 모델 관리', project: 'bid' },
+      { name: 'pgvector', used: '입찰 공고 후보 검색', project: 'bid' },
+      { name: 'Flutter', used: '모바일 앱 개발', project: 'bid' },
+      { name: 'AI API 연동', used: '로컬 AI 에이전트와 OpenAI 호환 API로 공고 분석', project: 'bid' },
+      { name: 'JavaScript', used: '웹 서비스 개발' },
+      { name: 'Node.js', used: '웹 서비스 개발' },
+      { name: 'IBM Aspera', used: 'Third-Party 웹 서비스 개발, 솔루션 연동, 쿠팡플레이, 퍼니플럭스, 대우건설, 아리랑TV 등 기술지원', project: 'aspera' },
     ],
   },
   {
     name: '컨테이너와 배포',
     desc: '컨테이너 환경을 만들고 배포를 자동화합니다.',
     skills: [
-      { name: 'Docker', level: 'run', used: 'Docker VM 5대 운영', project: 'virtual' },
-      { name: 'Kubernetes', level: 'run', used: '컨트롤 플레인 5대, 워커 5대 클러스터 구성', project: 'k8s' },
-      { name: 'Talos', level: 'run', used: 'Kubernetes 노드 운영체제와 템플릿 구성', project: 'k8s' },
-      { name: 'Argo CD', level: 'run', used: 'App of Apps로 Application 7개 관리', project: 'k8s' },
-      { name: 'Helm, Kustomize', level: 'run', used: 'GitOps 저장소의 플랫폼과 서비스 구성', project: 'k8s' },
-      { name: 'GitHub Actions', level: 'run', used: 'CI와 릴리즈 워크플로 구성', project: 'pipeline' },
-      { name: 'Harbor', level: 'run', used: '릴리즈 때 컨테이너 이미지 빌드와 푸시', project: 'pipeline' },
-      { name: 'Git Runner', level: 'run', used: 'Runner VM 2대 운영', project: 'pipeline' },
+      { name: 'Docker', used: 'Docker VM 5대 운영', project: 'virtual' },
+      { name: 'Kubernetes', used: '컨트롤 플레인 5대, 워커 5대 클러스터 구성', project: 'k8s' },
+      { name: 'Talos', used: 'Kubernetes 노드 운영체제와 템플릿 구성', project: 'k8s' },
+      { name: 'Argo CD', used: 'App of Apps로 Application 7개 관리', project: 'k8s' },
+      { name: 'Helm, Kustomize', used: 'GitOps 저장소의 플랫폼과 서비스 구성', project: 'k8s' },
+      { name: 'GitHub Actions', used: 'CI와 릴리즈 워크플로 구성', project: 'pipeline' },
+      { name: 'Harbor', used: '릴리즈 때 컨테이너 이미지 빌드와 푸시', project: 'pipeline' },
+      { name: 'Git Runner', used: 'Runner VM 2대 운영', project: 'pipeline' },
     ],
   },
   {
     name: '서버와 가상화',
     desc: '서버와 가상화 환경을 구축하고 이중화합니다.',
     skills: [
-      { name: 'Proxmox', level: 'run', used: '서버 5대 클러스터, VM 27대 구성', project: 'virtual' },
-      { name: 'Rocky Linux', level: 'run', used: 'Docker, 파일 전송, Runner VM과 템플릿 운영' },
-      { name: 'CentOS', level: 'run', used: '파일 전송 VM 3대 운영' },
-      { name: 'Pacemaker', level: 'run', used: '서버, 서비스 HA 구성', project: 'ha' },
-      { name: 'Vault', level: 'run', used: 'Kubernetes 비밀값 관리, Vault Secrets Operator 연동', project: 'k8s' },
-      { name: 'NFS', level: 'run', used: 'NFS provisioner와 모니터링 영구 볼륨', project: 'k8s' },
+      { name: 'Proxmox', used: '서버 5대 클러스터, VM 27대 구성', project: 'virtual' },
+      { name: 'Rocky Linux', used: 'Docker, 파일 전송, Runner VM과 템플릿 운영' },
+      { name: 'CentOS', used: '파일 전송 VM 3대 운영' },
+      { name: 'Pacemaker', used: '서버, 서비스 HA 구성', project: 'ha' },
+      { name: 'Vault', used: 'Kubernetes 비밀값 관리, Vault Secrets Operator 연동', project: 'k8s' },
+      { name: 'NFS', used: 'NFS provisioner와 모니터링 영구 볼륨', project: 'k8s' },
     ],
   },
   {
     name: '모니터링과 네트워크',
     desc: '서비스 상태를 살피고 네트워크를 관리합니다.',
     skills: [
-      { name: 'Prometheus', level: 'run', used: '모니터링 시스템 구축', project: 'monitor' },
-      { name: 'Grafana', level: 'run', used: '모니터링 시스템과 대시보드 구축', project: 'monitor' },
-      { name: 'Loki, Alloy', level: 'run', used: 'Kubernetes 로그 수집', project: 'monitor' },
-      { name: 'Traefik, MetalLB', level: 'run', used: 'Kubernetes 외부 접속 경로 구성', project: 'k8s' },
-      { name: '네트워크 관리', level: 'run', used: '시스템 운영과 공장 현장 N/W 유지보수' },
-      { name: 'IPT', level: 'used', used: '원넷정보기술 공장 현장 유지보수' },
+      { name: 'Prometheus', used: '모니터링 시스템 구축', project: 'monitor' },
+      { name: 'Grafana', used: '모니터링 시스템과 대시보드 구축', project: 'monitor' },
+      { name: 'Loki, Alloy', used: 'Kubernetes 로그 수집', project: 'monitor' },
+      { name: 'Traefik, MetalLB', used: 'Kubernetes 외부 접속 경로 구성', project: 'k8s' },
+      { name: '네트워크 관리', used: '시스템 운영과 공장 현장 N/W 유지보수' },
+      { name: 'IPT', used: '원넷정보기술 공장 현장 유지보수' },
     ],
   },
 ];
@@ -419,7 +417,7 @@ const fileService = {
   name: '파일 관리 서비스',
   action: { label: 'CI와 릴리즈 보기', href: '#ci' } as { label: string; href: string } | undefined,
   summary:
-    '드라이브, 공유 링크, 메시지, 게시판, 고속 파일 전송을 한곳에서 쓰는 파일 관리 서비스입니다. 화면과 API 서버, 리눅스 에이전트, CI와 릴리즈까지 함께 만들고 있습니다.',
+    '드라이브, 공유 링크, 메시지, 게시판, 고속 파일 전송을 한곳에서 쓰는 파일 관리 서비스입니다. 화면과 API 서버, 리눅스 에이전트, CI와 릴리즈까지 혼자 만들고 있습니다.',
   archLabel: '브라우저 화면이 API 서버에 연결되고, API 서버가 데이터베이스, 파일 저장소, Aspera 서버와 에이전트에 연결되는 구조',
   layers: [
     {
@@ -461,7 +459,7 @@ const bidService = {
   name: 'AI 입찰 공고 분석 서비스',
   action: undefined,
   summary:
-    '나라장터 입찰 공고를 수집하고 AI로 분석해 자사 제품, 용역, 기술과 맞는 공고를 찾아 주는 서비스입니다. 웹과 모바일 앱, API 서버를 함께 만들었습니다.',
+    '나라장터 입찰 공고를 수집하고 AI로 분석해 자사 제품, 용역, 기술과 맞는 공고를 찾아 주는 서비스입니다. 웹과 모바일 앱, API 서버를 혼자 만들었습니다.',
   archLabel: '웹과 모바일 앱이 NestJS API 서버에 연결되고, API 서버가 PostgreSQL과 나라장터, AI에 연결되는 구조',
   layers: [
     {
@@ -529,6 +527,13 @@ export const folders = [
   },
 ];
 
+// ── 직접 만든 웹사이트 ──────────────────────────────────
+
+export const sites = [
+  { name: '케이엔피플', desc: 'IT 솔루션 기업 웹사이트', url: 'https://knpeople.com/', image: '/sites/knpeople.webp' },
+  { name: '스토넷', desc: '스토리지 기업 웹사이트', url: 'https://www.stonet.co.kr/', image: '/sites/stonet.webp' },
+];
+
 // ── 프로젝트 ────────────────────────────────────────────
 // demo: list = 항목 나열, ha = 서버 전환 버튼
 // 데모는 동작을 보여 주는 예시이며 실제 실행 결과가 아닙니다.
@@ -576,7 +581,7 @@ export const projects = [
     win: 'GitHub Actions',
     lines: ['CI: Pull Request마다 잡 22개', '백엔드 테스트 6개로 분할', '릴리즈: 수동 실행, 잡 23개', 'Harbor 이미지 푸시', 'GitHub Release 발행'],
     title: 'GitHub Actions CI와 릴리즈',
-    summary: 'main 대상 Pull Request를 올리면 변경 범위에 맞춰 보안 검사, 프론트엔드 검사, 백엔드 빌드와 테스트가 단계별로 돌고 마지막에 결과를 확인합니다. 오래 걸리는 백엔드 테스트는 6개로 나눠 병렬로 실행합니다. 릴리즈는 같은 검증을 거친 뒤 Harbor에 이미지를 올리고 GitHub Release를 발행합니다.',
+    summary: 'main 대상 Pull Request를 올리면 변경 범위에 맞춰 보안 검사, 프론트엔드 검사, 백엔드 빌드와 테스트가 단계별로 돌고 마지막에 결과를 확인합니다. 백엔드 테스트는 6개로 나눠 병렬로 실행해, 실행 기록 한 건 기준 합계 약 19분 걸릴 테스트를 7분 34초 만에 끝냅니다. 릴리즈는 같은 검증을 거친 뒤 Harbor에 이미지를 올리고 GitHub Release를 발행합니다.',
     stack: ['GitHub Actions', 'Harbor', 'Git Runner'],
   },
   {
@@ -590,10 +595,16 @@ export const projects = [
   },
 ];
 
-// ── 학력과 자격증 ───────────────────────────────────────
+// ── 학력 ────────────────────────────────────────────────
 
-export const timeline = [
-  { when: '2024.08', what: '컴퓨터공학과 졸업', where: '서울사이버대학교' },
+export const education = [
+  { when: '2020.03 – 2024.08', what: '서울사이버대학교 졸업', where: '컴퓨터공학과' },
+  { when: '2012.03 – 2015.02', what: '제천상업고등학교 졸업', where: '' },
+];
+
+// ── 자격증 ──────────────────────────────────────────────
+
+export const certificates = [
   { when: '2018.12', what: '사무자동화산업기사', where: '한국산업인력공단' },
   { when: '2016.12', what: '정보처리기능사', where: '한국기술자격검정원' },
   { when: '2015.08', what: '워드프로세서 1급', where: '대한상공회의소' },

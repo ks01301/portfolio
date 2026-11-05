@@ -1,20 +1,154 @@
 ---
-import GlassFolder from './ui/glass-folder-cards';
 import { folders } from '../data/site';
+
+const BACK = 'M0 56A22 22 0 0 1 22 34L146 34C170 34 172 0 198 0L318 0A22 22 0 0 1 340 22L340 250A22 22 0 0 1 318 272L22 272A22 22 0 0 1 0 250Z';
+const FRONT = 'M0 22A22 22 0 0 1 22 0L118 0C144 0 146 32 172 32L318 32A22 22 0 0 1 340 54L340 176A22 22 0 0 1 318 198L22 198A22 22 0 0 1 0 176Z';
+const slot = (i: number, n: number) => (n <= 1 ? 0 : (i / (n - 1)) * 2 - 1);
+const projects = folders.flatMap((f) => f.files);
 ---
 
 <div class="folders">
   {
-    folders.map((f, i) => (
-      <GlassFolder
-        client:visible
-        label={f.label}
-        meta={`프로젝트 ${f.files.length}개`}
-        art="none"
-        files={f.files}
-        action="none"
-        appearDelay={i * 140}
-      />
+    folders.map((f) => (
+      <div class="gf" data-folder>
+        <div class="gf-stage">
+          <svg class="gf-back" viewBox="0 0 340 272" aria-hidden="true">
+            <path d={BACK} />
+          </svg>
+          <div class="gf-files" role="list" aria-label={`${f.label} 프로젝트`} inert>
+            {f.files.map((file, i) => (
+              <div role="listitem" class="gf-slot">
+                <a
+                  class="gf-sheet"
+                  href={file.href}
+                  style={`--slot:${slot(i, f.files.length)};--depth:${f.files.length - 1 - i};z-index:${i + 1}`}
+                >
+                  <span class="gf-name">{file.name}</span>
+                  <span class="gf-lines" aria-hidden="true">
+                    <i style="width:86%" />
+                    <i style="width:92%" />
+                    <i style="width:64%" />
+                    <i style="width:88%" />
+                  </span>
+                </a>
+              </div>
+            ))}
+          </div>
+          <div class="gf-front">
+            <svg viewBox="0 0 340 198" aria-hidden="true">
+              <path d={FRONT} />
+            </svg>
+            <button
+              type="button"
+              class="gf-hit"
+              aria-expanded="false"
+              aria-label={`${f.label} 폴더 열기, 프로젝트 ${f.files.length}개`}
+              data-label={f.label}
+              data-count={f.files.length}
+            />
+            <div class="gf-label">
+              <b>{f.label}</b>
+              <span>프로젝트 {f.files.length}개</span>
+            </div>
+          </div>
+        </div>
+      </div>
     ))
   }
 </div>
+
+<ul class="plist" aria-label="프로젝트 바로 보기">
+  {
+    projects.map((p) => (
+      <li>
+        <a href={p.href}>{p.name}</a>
+      </li>
+    ))
+  }
+</ul>
+
+<dialog class="pmodal" id="project-modal">
+  <button class="pmodal-close" type="button" aria-label="닫기" data-close>
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+  </button>
+  <div class="pmodal-body" id="project-modal-body"></div>
+</dialog>
+
+<script>
+  // 폴더 열고 닫기
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-folder]')];
+  const setOpen = (root: HTMLElement, open: boolean) => {
+    root.toggleAttribute('data-open', open);
+    root.querySelector('.gf-files')!.toggleAttribute('inert', !open);
+    const hit = root.querySelector<HTMLButtonElement>('.gf-hit')!;
+    hit.setAttribute('aria-expanded', String(open));
+    hit.setAttribute('aria-label', `${hit.dataset.label} 폴더 ${open ? '닫기' : '열기'}, 프로젝트 ${hit.dataset.count}개`);
+  };
+  for (const root of roots) {
+    root.querySelector('.gf-hit')!.addEventListener('click', () => {
+      const next = !root.hasAttribute('data-open');
+      roots.forEach((r) => setOpen(r, r === root && next));
+    });
+  }
+  document.addEventListener('pointerdown', (e) => {
+    const t = e.target as HTMLElement;
+    if (!t.closest('[data-folder]') && !t.closest('.pmodal')) roots.forEach((r) => setOpen(r, false));
+  });
+
+  const dialog = document.getElementById('project-modal') as HTMLDialogElement;
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || dialog.open) return;
+    const open = roots.find((r) => r.hasAttribute('data-open'));
+    if (!open) return;
+    setOpen(open, false);
+    open.querySelector<HTMLElement>('.gf-hit')!.focus();
+  });
+
+  // 프로젝트 모달
+  const body = document.getElementById('project-modal-body')!;
+  let moved: HTMLElement | null = null;
+  let holder: HTMLElement | null = null;
+
+  // 프로젝트 내용을 복사하지 않고 그대로 옮겨서, 안의 버튼 동작을 유지한다.
+  const restore = () => {
+    if (!moved || !holder) return;
+    holder.replaceWith(moved);
+    moved = null;
+    holder = null;
+    dialog.classList.remove('pmodal-wide');
+  };
+
+  const show = (id: string) => {
+    restore();
+    const target = document.getElementById(id);
+    if (!target || dialog.open) return;
+    holder = document.createElement('div');
+    target.replaceWith(holder);
+    moved = target;
+    body.append(target);
+    dialog.classList.toggle('pmodal-wide', target.classList.contains('mv'));
+    dialog.setAttribute('aria-label', target.querySelector('h3')?.textContent ?? '프로젝트');
+    dialog.showModal();
+    dialog.scrollTop = 0;
+  };
+
+  // 폴더뿐 아니라 페이지의 모든 프로젝트 링크를 모달로 연다.
+  document.addEventListener('click', (e) => {
+    const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#project-"]');
+    if (!link) return;
+    e.preventDefault();
+    show(link.getAttribute('href')!.slice(1));
+  });
+
+  dialog.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    // 바깥 어두운 영역을 누르거나, 닫기 버튼이나 페이지 안 링크를 누르면 닫는다.
+    if (t === dialog || t.closest('[data-close]') || t.closest('a[href^="#"]')) {
+      dialog.close();
+      restore();
+    }
+  });
+  dialog.addEventListener('close', restore);
+
+  if (location.hash.startsWith('#project-')) show(location.hash.slice(1));
+</script>

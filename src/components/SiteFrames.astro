@@ -1,0 +1,73 @@
+---
+import { sites } from '../data/site';
+---
+
+<div class="sites">
+  <h3 class="sites-title">직접 만든 웹사이트</h3>
+  <div class="sites-grid">
+    {
+      sites.map((s) => (
+        <article class="site">
+          <div class="site-frame">
+            <img src={s.image} alt={`${s.name} 웹사이트 첫 화면`} width="1176" height="690" loading="lazy" />
+            <button
+              type="button"
+              class="site-open"
+              data-site-open={s.url}
+              data-site-name={s.name}
+              aria-label={`${s.name} 사이트 크게 보기`}
+            >
+              <span>크게 보기</span>
+            </button>
+          </div>
+          <div class="site-text">
+            <h4>{s.name}</h4>
+            <p>{s.desc}</p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</div>
+
+<dialog class="pmodal smodal" id="site-modal">
+  <header class="smodal-head">
+    <h3 id="site-modal-title"></h3>
+    <a id="site-modal-link" href="#" target="_blank" rel="noopener noreferrer">새 탭에서 열기</a>
+    <button class="pmodal-close smodal-close" type="button" aria-label="닫기" data-site-close>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+    </button>
+  </header>
+  <iframe
+    id="site-modal-frame"
+    title="웹사이트"
+    referrerpolicy="no-referrer"
+    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+  ></iframe>
+</dialog>
+
+<script>
+  // 이미지를 누르면 모달에서 사이트를 연다. 닫으면 사이트 로딩도 멈춘다.
+  const dialog = document.getElementById('site-modal') as HTMLDialogElement;
+  const frame = document.getElementById('site-modal-frame') as HTMLIFrameElement;
+  const title = document.getElementById('site-modal-title')!;
+  const link = document.getElementById('site-modal-link') as HTMLAnchorElement;
+
+  document.querySelectorAll<HTMLButtonElement>('[data-site-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const { siteOpen: url, siteName: name } = button.dataset;
+      title.textContent = name!;
+      link.href = url!;
+      frame.title = `${name} 웹사이트`;
+      dialog.setAttribute('aria-label', `${name} 웹사이트`);
+      frame.src = url!;
+      dialog.showModal();
+    });
+  });
+
+  dialog.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (t === dialog || t.closest('[data-site-close]')) dialog.close();
+  });
+  dialog.addEventListener('close', () => frame.removeAttribute('src'));
+</script>

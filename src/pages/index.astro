@@ -3,9 +3,11 @@ import Base from '../layouts/Base.astro';
 import Architecture from '../components/Architecture.astro';
 import Featured from '../components/Featured.astro';
 import ProjectFolders from '../components/ProjectFolders.astro';
-import { profile, focus, experience, skillGroups, levels, projects, timeline } from '../data/site';
+import SiteFrames from '../components/SiteFrames.astro';
+import { profile, focus, experience, skillGroups, mainSkills, projects, education, certificates } from '../data/site';
 
-const levelLabel = (id: string) => levels.find((l) => l.id === id)?.label ?? '';
+const allSkills = skillGroups.flatMap((g) => g.skills);
+const main = mainSkills.map((name) => allSkills.find((s) => s.name === name)!);
 ---
 
 <Base>
@@ -26,18 +28,24 @@ const levelLabel = (id: string) => levels.find((l) => l.id === id)?.label ?? '';
         </div>
         <div class="stack">
           <div class="pc pc-resume" aria-hidden="true">
-            <b>경력 {profile.careerYears}</b>{profile.name}
-            <i style="width:82%"></i><i style="width:60%"></i><i style="width:74%"></i><i style="width:48%"></i>
+            <b>하는 일</b>
+            <ul>
+              <li>웹 서비스 개발</li>
+              <li>배포 자동화</li>
+              <li>서버와 네트워크 운영</li>
+              <li>솔루션 기술지원</li>
+            </ul>
           </div>
           <div class="pc pc-term" aria-hidden="true">
-            {`Kubernetes, Talos
-control-plane  5
-worker         5`}
+            {`$ git push origin main
+test    done
+build   done
+deploy  done`}
           </div>
           <div class="pc pc-state">
-            <b><span class="lamp" aria-hidden="true"></span>Proxmox 클러스터</b>
-            <p>서버 5대, VM 27대를 서비스, 사내, Kubernetes 영역으로 나눠 구성했습니다.</p>
-            <a href="#infra">인프라 구성도 보기</a>
+            <b><span class="lamp" aria-hidden="true"></span>만들고, 배포하고, 운영합니다</b>
+            <p>서비스 개발부터 배포와 운영까지 이어서 맡고 있습니다.</p>
+            <a href="#career">경력 보기</a>
           </div>
         </div>
       </section>
@@ -103,20 +111,32 @@ worker         5`}
       <div class="wrap">
         <div class="sh">
           <small>기술</small>
-          <h2>분야별로 어디까지 해 봤는지 나눴습니다.</h2>
+          <h2>분야별로 정리한 기술입니다.</h2>
           <p>기술을 누르면 어디에 썼는지 나옵니다.</p>
         </div>
-        <div class="legend" id="sk-filter" role="group" aria-label="숙련도로 걸러 보기">
-          {
-            levels.map((l) => (
-              <button type="button" data-filter={l.id} aria-pressed="false">
-                <i style={`background:${l.id === 'run' ? 'var(--fill)' : 'var(--sysbg)'}`} />
-                {l.label}
-              </button>
-            ))
-          }
-        </div>
         <div class="skills" id="sk-list">
+          <div class="sk-row sk-row-main">
+            <div>
+              <b>주력 기술</b>
+              <span class="d">가장 많이 쓰는 기술입니다.</span>
+            </div>
+            <div class="sk-list">
+              {
+                main.map((s) => (
+                  <button
+                    type="button"
+                    class="sk sk-main"
+                    data-name={s.name}
+                    data-used={s.used ?? ''}
+                    data-project={s.project ?? ''}
+                    aria-pressed="false"
+                  >
+                    {s.name}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
           {
             skillGroups.map((g) => (
               <div class="sk-row">
@@ -129,15 +149,12 @@ worker         5`}
                     <button
                       type="button"
                       class="sk"
-                      data-level={s.level}
                       data-name={s.name}
-                      data-label={levelLabel(s.level)}
                       data-used={s.used ?? ''}
                       data-project={s.project ?? ''}
                       aria-pressed="false"
                     >
                       {s.name}
-                      <span class="sr">({levelLabel(s.level)})</span>
                     </button>
                   ))}
                 </div>
@@ -154,9 +171,12 @@ worker         5`}
         <div class="sh">
           <small>프로젝트</small>
           <h2>직접 맡아서 만든 것들입니다.</h2>
-          <p>폴더를 열고 파일을 누르면 해당 프로젝트로 이동합니다. HA 카드의 버튼은 동작을 보여 주는 예시입니다.</p>
+          <p>폴더를 열고 파일을 누르면 프로젝트 내용이 창으로 열립니다.</p>
         </div>
         <ProjectFolders />
+        <SiteFrames />
+        <!-- 프로젝트 내용은 화면에 바로 보이지 않고, 폴더에서 고르면 모달로 열린다. -->
+        <div hidden>
         <Featured />
         <div class="cards">
           {
@@ -191,27 +211,36 @@ worker         5`}
             ))
           }
         </div>
+        </div>
       </section>
 
       <section class="sec" id="history">
         <div class="sh">
-          <small>소개</small>
-          <h2>학력과 자격증</h2>
+          <small>학력과 자격증</small>
+          <h2>배운 곳과 취득한 자격증입니다.</h2>
         </div>
         <div class="ab">
-          <ol class="hist">
-            {
-              timeline.map((t) => (
-                <li>
-                  <time>{t.when}</time>
-                  <span>
-                    {t.what}
-                    <small>{t.where}</small>
-                  </span>
-                </li>
-              ))
-            }
-          </ol>
+          {
+            [
+              { title: '학력', items: education, cls: 'hist hist-wide' },
+              { title: '자격증', items: certificates, cls: 'hist' },
+            ].map((group) => (
+              <div>
+                <h3>{group.title}</h3>
+                <ol class={group.cls}>
+                  {group.items.map((t) => (
+                    <li>
+                      <time>{t.when}</time>
+                      <span>
+                        {t.what}
+                        {t.where && <small>{t.where}</small>}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))
+          }
         </div>
       </section>
     </div>
@@ -233,6 +262,15 @@ worker         5`}
 
   const $ = (id: string) => document.getElementById(id)!;
 
+  // 첫 화면 카드: 포인터를 따라가는 강조
+  document.querySelectorAll<HTMLElement>('.focus article').forEach((card) => {
+    card.addEventListener('pointermove', (e) => {
+      const box = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - box.left}px`);
+      card.style.setProperty('--my', `${e.clientY - box.top}px`);
+    });
+  });
+
   // 이메일 복사
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
     const original = b.textContent!;
@@ -247,21 +285,13 @@ worker         5`}
     });
   });
 
-  // 기술 필터와 설명
+  // 기술 설명
   const skills = [...document.querySelectorAll<HTMLButtonElement>('.sk')];
-  const filters = [...document.querySelectorAll<HTMLButtonElement>('#sk-filter button')];
-  for (const b of filters) {
-    b.addEventListener('click', () => {
-      const on = b.getAttribute('aria-pressed') !== 'true';
-      filters.forEach((x) => x.setAttribute('aria-pressed', String(on && x === b)));
-      skills.forEach((s) => s.classList.toggle('is-dim', on && s.dataset.level !== b.dataset.filter));
-    });
-  }
   for (const b of skills) {
     b.addEventListener('click', () => {
       skills.forEach((s) => s.setAttribute('aria-pressed', String(s === b)));
-      const { name, label, used, project } = b.dataset;
-      $('sk-detail').innerHTML = `<b>${name}</b>, ${label}. ${used ? `${used}.` : ''}${project ? ` <a href="#project-${project}">프로젝트 보기</a>` : ''}`;
+      const { name, used, project } = b.dataset;
+      $('sk-detail').innerHTML = `<b>${name}</b>. ${used ? `${used}.` : ''}${project ? ` <a href="#project-${project}">프로젝트 보기</a>` : ''}`;
     });
   }
 
