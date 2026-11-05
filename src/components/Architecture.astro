@@ -1,0 +1,170 @@
+---
+import { infra, infraTags, ci, release, gitops } from '../data/site';
+
+const workflows = [
+  { ...ci, id: 'ci', cls: 'ci-graph', run: '실행 순서 보기' },
+  { ...release, id: 'release', cls: 'ci-graph ci-graph-5', run: '실행 순서 보기' },
+  { ...gitops, id: 'gitops', cls: 'ci-graph ci-graph-5', run: '동기화 순서 보기' },
+];
+
+const tints: Record<string, string> = {
+  Docker: '#dff3c4',
+  '파일 전송': '#e5dcfb',
+  Kubernetes: '#cfe0ff',
+  'Git Runner': '#ffe0c7',
+  '개발, 테스트': '#fff0a3',
+};
+---
+
+<div class="arch-tags" id="arch-tags" role="group" aria-label="용도로 걸러 보기">
+  {
+    infraTags.map((t) => (
+      <button type="button" data-tag={t} aria-pressed="false">
+        {t}
+      </button>
+    ))
+  }
+</div>
+
+<div class="arch">
+  <div class="cluster">
+    <div class="cluster-head">
+      <h3>{infra.cluster}</h3>
+      <ul class="hosts">
+        {infra.hosts.map((h) => <li>{h.name} {h.count}대</li>)}
+      </ul>
+    </div>
+
+    <div class="zones">
+      {
+        infra.zones.map((z, zi) => (
+          <section class={zi === 1 ? 'zone zone-wide' : 'zone'}>
+            <div class="zone-head">
+              <b>{z.name}</b>
+              <small>{z.note}</small>
+            </div>
+            <div class="zone-groups">
+              {z.groups.map((g) => (
+                <button
+                  type="button"
+                  class="ig"
+                  data-group={g.tag}
+                  data-title={`${z.name}, ${g.title}`}
+                  data-body={g.body}
+                  style={`--tint:${tints[g.tag]}`}
+                  aria-pressed="false"
+                >
+                  <b>
+                    {g.title}
+                    <span>{g.vms}대</span>
+                  </b>
+                  <small>{g.os.join(', ')}</small>
+                  <span class="vms" aria-hidden="true">
+                    {Array.from({ length: g.vms }, () => (
+                      <i />
+                    ))}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+
+    <button
+      type="button"
+      class="tpl"
+      data-title={infra.templates.title}
+      data-body={infra.templates.body}
+      aria-pressed="false"
+    >
+      <b>{infra.templates.title}</b>
+      <span>{infra.templates.items.join(', ')}</span>
+    </button>
+  </div>
+
+  <div class="arch-detail" id="arch-detail" aria-live="polite">묶음을 하나 눌러 보세요.</div>
+
+  {
+    workflows.map((w) => (
+      <section class="ci" id={w.id}>
+        <div class="ci-head">
+          <h3>{w.workflow}</h3>
+          <button class="btn btn-sm" type="button" data-ci-run>
+            {w.run}
+          </button>
+        </div>
+        <ul class="ci-facts">
+          {w.facts.map((f) => (
+            <li>{f}</li>
+          ))}
+        </ul>
+        <div class={w.cls}>
+          {w.stages.map((st) => (
+            <div class="ci-stage">
+              <h4>{st.title}</h4>
+              {st.groups.map((g) => (
+                <div class="ci-group">
+                  {'label' in g && g.label && <b>{g.label}</b>}
+                  {g.jobs.map((j) => (
+                    <div class="ci-job">
+                      <span>{j.name}</span>
+                      <span class="ci-time">{j.time}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<script>
+  const detail = document.getElementById('arch-detail')!;
+  const items = [...document.querySelectorAll<HTMLButtonElement>('.ig, .tpl')];
+  const groups = [...document.querySelectorAll<HTMLButtonElement>('.ig')];
+  const tags = [...document.querySelectorAll<HTMLButtonElement>('#arch-tags button')];
+
+  for (const b of items) {
+    b.addEventListener('click', () => {
+      items.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      detail.textContent = '';
+      const title = document.createElement('b');
+      title.textContent = b.dataset.title!;
+      detail.append(title, `. ${b.dataset.body}`);
+    });
+  }
+
+  for (const b of tags) {
+    b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      tags.forEach((x) => x.setAttribute('aria-pressed', String(on && x === b)));
+      groups.forEach((g) => g.classList.toggle('is-dim', on && g.dataset.group !== b.dataset.tag));
+    });
+  }
+
+  // CI 단계 순서 보기. 시간은 실제 실행 시간이 아니라 순서만 보여 준다.
+  const gap = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 800;
+  document.querySelectorAll<HTMLButtonElement>('[data-ci-run]').forEach((button) => {
+    const stages = [...button.closest('.ci')!.querySelectorAll<HTMLElement>('.ci-stage')];
+    let timers: number[] = [];
+    button.addEventListener('click', () => {
+      timers.forEach(clearTimeout);
+      timers = [];
+      stages.forEach((s) => s.classList.remove('is-run', 'is-done'));
+      stages.forEach((s, i) => {
+        timers.push(window.setTimeout(() => s.classList.add('is-run'), i * gap));
+        timers.push(
+          window.setTimeout(() => {
+            s.classList.remove('is-run');
+            s.classList.add('is-done');
+          }, (i + 1) * gap),
+        );
+      });
+    });
+  });
+</script>

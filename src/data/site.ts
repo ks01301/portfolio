@@ -1,228 +1,291 @@
 // 사이트에 보이는 모든 내용은 이 파일에 있습니다.
-// 지금 들어 있는 값은 전부 예시이니 본인 내용으로 바꿔 주세요.
 
 export const profile = {
-  name: '홍길동',
-  // 상단 왼쪽에 표시됩니다. 구직 중이 아니면 '재직 중' 등으로 바꾸세요.
-  status: '구직 중',
+  name: '김강산',
   // 첫 화면의 큰 제목 두 줄입니다. 아래 줄은 외곽선 글자로 표시됩니다.
-  titleTop: '홍길동',
+  titleTop: '김강산',
   titleBottom: 'PORTFOLIO',
-  greeting: '안녕하세요, 홍길동입니다.',
+  greeting: '안녕하세요, 김강산입니다.',
   intro:
-    '개발과 배포 자동화, 서버 운영을 함께 맡아 왔습니다. 학과 실습 서버 12대를 관리하는 일로 시작해 서비스 40여 개가 올라간 쿠버네티스 클러스터 운영까지 해 봤습니다.',
-  email: 'you@example.com',
-  github: 'https://github.com/your-id',
-  blog: 'https://your-blog.example.com',
-  // public 폴더에 resume.pdf를 넣으면 연결됩니다.
-  resume: '/resume.pdf',
-  // public 폴더에 사진을 넣고 경로를 적으면 표시됩니다. 예: '/profile.jpg'
-  photo: '',
+    '9년 동안 서버와 네트워크 운영, 솔루션 기술지원, 웹 서비스 개발을 맡아 왔습니다. 지금은 Proxmox 서버 5대에 VM 27대를 구성해 운영하면서, Go와 React로 파일 관리 서비스를 만들고 있습니다. 내일이 아닌 1년 뒤, 10년 뒤를 바라보고 일합니다.',
+  careerYears: '총 9년',
+  email: 'kks01301@naver.com',
   location: '서울',
-  description: '홍길동의 포트폴리오. 개발, 데브옵스, 서버 운영 경력과 기술을 소개합니다.',
+  description: '김강산의 포트폴리오. 서버와 네트워크 운영, 솔루션 기술지원, 웹 서비스 개발 경력을 소개합니다.',
 };
 
-// ── 첫 화면 아래 요약 숫자 ──────────────────────────────
+// ── 첫 화면 아래 하는 일 카드 ───────────────────────────
+// href는 누르면 이동할 위치입니다.
 
-export const summary = [
-  { value: '40+', label: '운영한 서비스', detail: '쿠버네티스 클러스터, ○○테크' },
-  { value: '12', label: '관리한 서버', detail: '학과 실습 리눅스 서버, ○○대학교' },
-  { value: '62', label: '무중단 배포', detail: '4개월 동안 배포로 인한 중단 없음' },
-  { value: '4', label: '자격증', detail: 'CKA, AWS SAA, 정보처리기사, 리눅스마스터' },
+export const focus = [
+  {
+    title: '서비스 개발',
+    body: 'Go와 React로 파일 관리 서비스를, NestJS와 Flutter로 AI 입찰 공고 분석 서비스를 만들었습니다. IBM Aspera 연동과 기술지원도 맡고 있습니다.',
+    link: '대표 프로젝트 보기',
+    href: '#project-files',
+  },
+  {
+    title: 'CI, 릴리즈, 모니터링',
+    body: 'GitHub Actions로 검증부터 Harbor 이미지 푸시, GitHub Release 발행까지 이어지는 흐름을 구성했습니다. Prometheus와 Grafana로 모니터링 시스템도 구축했습니다.',
+    link: 'CI와 릴리즈 구성 보기',
+    href: '#ci',
+  },
+  {
+    title: '가상화와 Kubernetes',
+    body: 'Proxmox 서버 5대에 VM 27대를 구성했습니다. Talos Kubernetes 클러스터는 Argo CD로 GitOps 방식으로 관리합니다.',
+    link: '인프라 구성도 보기',
+    href: '#infra',
+  },
 ];
 
-// ── 구성도 ──────────────────────────────────────────────
-// x, y는 넓은 화면의 노드 중심 좌표입니다 (캔버스 900 × 390).
-// mx, my는 휴대폰 화면의 좌표입니다 (캔버스 360 × 480).
-// killable이 true인 노드는 방문자가 내려 볼 수 있습니다.
-// id는 구성도 동작과 연결되어 있으니 바꾸지 마세요.
+// ── 인프라 구성도 ───────────────────────────────────────
+// 실제 Proxmox 구성을 정리한 내용입니다. 공개 페이지라 서버와 VM의 실제 이름은 넣지 않습니다.
+// vms는 칸 수로 그려지고, tag는 위쪽 필터와 연결됩니다.
 
-export type TopoNode = {
-  id: string;
-  x: number;
-  y: number;
-  mx: number;
-  my: number;
-  label: string;
-  sub: string;
-  title: string;
-  body: string;
-  tools: string[];
-  project?: string;
-  killable?: boolean;
+export const infraTags = ['Docker', '파일 전송', 'Kubernetes', 'Git Runner', '개발, 테스트'];
+
+export const infra = {
+  cluster: 'Proxmox VE 클러스터',
+  hosts: [
+    { name: '사내 서버', count: 2 },
+    { name: '서비스 서버', count: 3 },
+  ],
+  zones: [
+    {
+      name: '서비스 영역',
+      note: 'VM 8대',
+      groups: [
+        {
+          id: 'svc-docker',
+          tag: 'Docker',
+          title: 'Docker 서버',
+          vms: 2,
+          os: ['Rocky Linux'],
+          body: '서비스용 컨테이너를 실행하는 VM 2대입니다.',
+        },
+        {
+          id: 'svc-transfer',
+          tag: '파일 전송',
+          title: '파일 전송 서버',
+          vms: 6,
+          os: ['Rocky Linux', 'CentOS'],
+          body: '서비스 3개에 파일 전송 VM을 2대씩 구성했습니다. Rocky Linux와 CentOS를 각각 3대씩 운영합니다.',
+        },
+      ],
+    },
+    {
+      name: '사내 영역',
+      note: 'VM 9대',
+      groups: [
+        {
+          id: 'in-docker',
+          tag: 'Docker',
+          title: 'Docker 서버',
+          vms: 3,
+          os: ['Rocky Linux'],
+          body: '사내용 Docker VM 3대입니다. 이 중 1대는 개발용으로 씁니다.',
+        },
+        {
+          id: 'in-transfer',
+          tag: '파일 전송',
+          title: '파일 전송 서버',
+          vms: 2,
+          os: ['Rocky Linux'],
+          body: '사내 파일 전송 VM 2대입니다. 1대는 테스트용입니다.',
+        },
+        {
+          id: 'in-runner',
+          tag: 'Git Runner',
+          title: 'Git Runner',
+          vms: 2,
+          os: ['Rocky Linux'],
+          body: 'GitHub Actions의 CI와 릴리즈 작업을 실행하는 self-hosted Runner VM 2대입니다.',
+        },
+        {
+          id: 'in-dev',
+          tag: '개발, 테스트',
+          title: '개발 서버',
+          vms: 1,
+          os: ['Rocky Linux'],
+          body: '개발용 VM입니다.',
+        },
+        {
+          id: 'in-proxy',
+          tag: '개발, 테스트',
+          title: '프록시 테스트',
+          vms: 1,
+          os: ['Rocky Linux'],
+          body: '프록시 구성을 시험하는 테스트 VM입니다.',
+        },
+      ],
+    },
+    {
+      name: 'Kubernetes 영역',
+      note: 'VM 10대, Talos',
+      groups: [
+        {
+          id: 'k8s-control',
+          tag: 'Kubernetes',
+          title: '컨트롤 플레인',
+          vms: 5,
+          os: ['Talos'],
+          body: 'Talos로 구성한 Kubernetes 컨트롤 플레인 5대입니다.',
+        },
+        {
+          id: 'k8s-worker',
+          tag: 'Kubernetes',
+          title: '워커 노드',
+          vms: 5,
+          os: ['Talos'],
+          body: '같은 클러스터의 워커 노드 5대입니다.',
+        },
+      ],
+    },
+  ],
+  templates: {
+    title: 'VM 템플릿 5개',
+    items: ['Rocky Linux 9.8 (2개)', 'Amazon Linux 2023', 'CentOS 7', 'Talos'],
+    body: '운영체제별 템플릿을 만들어 두고 새 VM을 만들 때 씁니다.',
+  },
 };
 
-export const nodes: TopoNode[] = [
-  {
-    id: 'user',
-    x: 80,
-    y: 150,
-    mx: 85,
-    my: 40,
-    label: '사용자',
-    sub: '브라우저',
-    title: '사용자 요청',
-    body: '모든 요청은 여기서 출발합니다. 부하 테스트로 실제 트래픽을 흉내 내고 어디서 먼저 느려지는지 확인했습니다.',
-    tools: ['k6', 'curl', 'Chrome DevTools'],
-  },
-  {
-    id: 'edge',
-    x: 250,
-    y: 150,
-    mx: 275,
-    my: 40,
-    label: 'DNS, CDN',
-    sub: 'Cloudflare',
-    title: 'DNS와 CDN',
-    body: '도메인과 TLS 인증서를 관리합니다. 인증서 만료로 사이트가 내려간 뒤 갱신을 자동화했습니다.',
-    tools: ['Cloudflare', 'cert-manager', "Let's Encrypt"],
-    project: 'homelab',
-  },
-  {
-    id: 'lb',
-    x: 420,
-    y: 150,
-    mx: 180,
-    my: 135,
-    label: 'Ingress',
-    sub: 'Nginx',
-    title: '로드 밸런서',
-    body: '살아 있는 인스턴스로만 요청을 보냅니다. 헬스 체크 주기와 타임아웃을 조정해 배포 중 502 응답을 없앴습니다.',
-    tools: ['Nginx Ingress', 'MetalLB', 'AWS ALB'],
-    project: 'deploy',
-    killable: true,
-  },
-  {
-    id: 'app1',
-    x: 610,
-    y: 80,
-    mx: 85,
-    my: 235,
-    label: '앱 인스턴스 1',
-    sub: 'Kubernetes Pod',
-    title: '애플리케이션',
-    body: '직접 만든 API 서버를 컨테이너로 올렸습니다. 하나가 죽어도 다른 쪽이 요청을 받도록 두 개 이상 유지합니다.',
-    tools: ['Go', 'Docker', 'Kubernetes', 'Helm'],
-    project: 'homelab',
-    killable: true,
-  },
-  {
-    id: 'app2',
-    x: 610,
-    y: 220,
-    mx: 275,
-    my: 235,
-    label: '앱 인스턴스 2',
-    sub: 'Kubernetes Pod',
-    title: '애플리케이션',
-    body: 'readiness probe가 통과해야 트래픽을 받습니다. 준비 안 된 파드로 요청이 가지 않습니다.',
-    tools: ['Go', 'Docker', 'Kubernetes', 'Helm'],
-    project: 'homelab',
-    killable: true,
-  },
-  {
-    id: 'dbp',
-    x: 820,
-    y: 80,
-    mx: 85,
-    my: 335,
-    label: 'DB 1',
-    sub: 'PostgreSQL',
-    title: '데이터베이스',
-    body: '스트리밍 복제로 두 대를 묶었습니다. primary가 응답하지 않으면 replica가 승격해 쓰기를 이어받습니다.',
-    tools: ['PostgreSQL', 'Patroni', 'pgBackRest'],
-    project: 'terraform',
-    killable: true,
-  },
-  {
-    id: 'dbr',
-    x: 820,
-    y: 220,
-    mx: 275,
-    my: 335,
-    label: 'DB 2',
-    sub: 'PostgreSQL',
-    title: '데이터베이스',
-    body: '매일 새벽 백업을 받고 한 달에 한 번 복구 연습을 했습니다.',
-    tools: ['PostgreSQL', 'Patroni', 'pgBackRest'],
-    project: 'terraform',
-    killable: true,
-  },
-  {
-    id: 'ci',
-    x: 420,
-    y: 335,
-    mx: 85,
-    my: 440,
-    label: '배포 파이프라인',
-    sub: 'Actions, Argo CD',
-    title: 'CI/CD',
-    body: '코드를 올리면 테스트, 이미지 빌드, 배포가 이어집니다. 문제가 생기면 커밋 하나로 되돌립니다.',
-    tools: ['GitHub Actions', 'Argo CD', 'Argo Rollouts', 'Trivy'],
-    project: 'deploy',
-  },
-  {
-    id: 'mon',
-    x: 820,
-    y: 335,
-    mx: 275,
-    my: 440,
-    label: '모니터링',
-    sub: 'Prometheus',
-    title: '관측',
-    body: '지표와 로그를 한곳에 모았습니다. 알림이 너무 자주 울려서 증상 기준으로 다시 정리했습니다.',
-    tools: ['Prometheus', 'Grafana', 'Loki', 'Alertmanager'],
-    project: 'homelab',
-  },
-];
+// ── GitHub Actions CI와 릴리즈 ──────────────────────────
+// 실제 실행 기록 한 건씩을 옮긴 내용입니다. 저장소 이름과 제품명은 넣지 않습니다.
+// stages는 왼쪽부터 순서대로 그려지고, 같은 단계의 잡은 병렬로 실행됩니다.
+
+export const ci = {
+  workflow: 'CI: Pull Request마다 실행',
+  facts: ['잡 22개', 'self-hosted Runner', '변경 범위에 따라 검사 선택', '백엔드 테스트 31개 묶음을 6개로 분할', '실행 1회 13분'],
+  stages: [
+    {
+      title: '범위 확인과 보안 검사',
+      groups: [
+        { jobs: [{ name: 'CI scope', time: '32초' }, { name: 'Product version', time: '23초' }] },
+        {
+          label: 'Security',
+          jobs: [
+            { name: 'agent', time: '25초' },
+            { name: 'backend', time: '1분 8초' },
+            { name: 'frontend', time: '40초' },
+          ],
+        },
+      ],
+    },
+    {
+      title: '준비와 프론트엔드 검사',
+      groups: [
+        {
+          jobs: [
+            { name: 'Agent shared backend binary', time: '37초' },
+            { name: 'Backend test discovery', time: '20초' },
+            { name: 'Agent test and vet', time: '50초' },
+          ],
+        },
+        {
+          label: 'Frontend',
+          jobs: [
+            { name: 'api-codegen', time: '1분' },
+            { name: 'build', time: '1분 3초' },
+            { name: 'checks', time: '3분 3초' },
+            { name: 'storybook', time: '2분 33초' },
+          ],
+        },
+      ],
+    },
+    {
+      title: '백엔드 빌드와 분할 테스트',
+      groups: [
+        {
+          label: 'Backend',
+          jobs: [
+            { name: 'api-codegen', time: '40초' },
+            { name: 'vet-build', time: '2분 44초' },
+          ],
+        },
+        {
+          label: 'Backend tests',
+          jobs: [
+            { name: 'shard 1', time: '7분 34초' },
+            { name: 'shard 2', time: '1분 51초' },
+            { name: 'shard 3', time: '2분 16초' },
+            { name: 'shard 4', time: '2분 10초' },
+            { name: 'shard 5', time: '2분 54초' },
+            { name: 'shard 6', time: '2분 22초' },
+          ],
+        },
+      ],
+    },
+    {
+      title: '결과 확인',
+      groups: [{ jobs: [{ name: 'Backend test', time: '10초' }, { name: 'verify', time: '17초' }] }],
+    },
+  ],
+};
+
+export const release = {
+  workflow: '릴리즈: main 브랜치에서 수동 실행',
+  facts: ['잡 23개', 'CI 워크플로 재사용', '버전 커밋과 태그 생성', '실행 1회 13분 37초'],
+  stages: [
+    { title: '실행 조건 확인', groups: [{ jobs: [{ name: 'guard', time: '12초' }] }] },
+    { title: '코드 검증', groups: [{ jobs: [{ name: 'validate', time: '잡 19개' }] }] },
+    { title: '버전 발행', groups: [{ jobs: [{ name: 'publish', time: '19초' }] }] },
+    { title: '이미지 빌드와 푸시', groups: [{ jobs: [{ name: 'Harbor image', time: '4분 8초' }] }] },
+    { title: '릴리즈 발행', groups: [{ jobs: [{ name: 'GitHub Release', time: '22초' }] }] },
+  ],
+};
 
 // ── 경력 ────────────────────────────────────────────────
 // 최근 것이 위로 오게 적습니다. open이 true면 주요 업무가 펼쳐진 채로 보입니다.
 
 export const experience = [
   {
-    company: '○○테크',
-    badge: '인턴',
-    team: '인프라팀',
-    period: '2025.12 – 2026.05',
-    summary: '사내 서비스 40여 개가 올라간 쿠버네티스 클러스터 운영을 도왔습니다.',
+    company: '케이엔피플',
+    badge: '재직 중',
+    team: 'IT사업부',
+    period: '2019.12 – 현재',
+    summary: '시스템 운영 및 관리(서버, 네트워크 등), 솔루션 기술지원(IBM Aspera 등), 웹 서비스 개발 및 솔루션 연동을 맡고 있습니다.',
     work: [
-      '노드 OS 패치를 Ansible 플레이북으로 옮겨 작업 시간을 4시간에서 40분으로 줄였습니다.',
-      '알림 규칙 120개를 검토해 중복과 오탐을 정리했고, 주간 알림 수가 절반으로 줄었습니다.',
-      '신규 입사자용 클러스터 접근 가이드를 썼습니다.',
+      'Go, React 기반 파일 관리 서비스 개발',
+      'NestJS, React, Flutter 기반 AI 입찰 공고 분석 서비스 개발',
+      'IBM Aspera Third-Party 웹 서비스 개발',
+      'Proxmox, Docker 등 사내 가상화 환경 도입으로 잉여 자원 활용 및 테스트 환경 구축',
+      'Proxmox 서버 5대로 클러스터를 구성하고 서비스, 사내, Kubernetes 용도로 VM 27대 운영',
+      'Talos로 컨트롤 플레인 5대, 워커 5대의 Kubernetes 클러스터 구성',
+      'Argo CD로 플랫폼과 서비스 Application 7개를 GitOps 방식으로 관리',
+      'Vault와 Vault Secrets Operator로 비밀값을 Git 밖에서 관리',
+      'Pacemaker 등을 사용한 서버, 서비스 HA 구성',
+      '서비스 테스트 및 배포 파이프라인 구축',
+      'GitHub Actions로 Pull Request마다 잡 22개가 도는 CI 구성(보안 검사, 프론트엔드 검사, 백엔드 테스트 6개 분할)',
+      'GitHub Actions 릴리즈 워크플로 구성(검증, Harbor 이미지 빌드와 푸시, GitHub Release 발행)',
+      'Prometheus, Grafana 등을 통한 모니터링 시스템 구축',
     ],
-    stack: ['Kubernetes', 'Ansible', 'Prometheus', 'AWS'],
+    stack: ['Go', 'React', 'PostgreSQL', 'IBM Aspera', 'Proxmox', 'Docker', 'Kubernetes', 'Talos', 'Argo CD', 'Vault', 'GitHub Actions', 'Harbor', 'Pacemaker', 'Prometheus', 'Grafana'],
     open: true,
   },
   {
-    company: '○○대학교 전산실',
-    badge: '근로 장학생',
-    team: '서버 관리',
-    period: '2024.03 – 2025.02',
-    summary: '학과 실습용 리눅스 서버 12대의 계정, 백업, 장애 대응을 맡았습니다.',
-    work: [
-      '학기마다 300개 넘는 계정을 만들던 작업을 셸 스크립트로 자동화했습니다.',
-      '야간 백업을 구성하고 학기에 한 번 복구 테스트를 했습니다.',
-      '디스크 장애와 네트워크 문제를 1차 대응하고 처리 내용을 문서로 남겼습니다.',
-    ],
-    stack: ['Linux', 'Bash', 'rsync', 'NFS'],
+    company: '원넷정보기술',
+    badge: '2년 1개월',
+    team: '금융센터팀 사원',
+    period: '2017.12 – 2019.12',
+    summary: '현대시멘트 단양공장, 영월공장, 한일시멘트 단양공장의 PC, IPT, 네트워크를 유지보수했습니다.',
+    work: ['공장 현장의 PC 유지보수', 'IPT(IP 전화) 유지보수', '네트워크 유지보수'],
+    stack: ['PC', 'IPT', 'N/W'],
     open: false,
   },
 ];
 
 // ── 기술 ────────────────────────────────────────────────
-// level: run = 직접 운영, used = 프로젝트에 사용, learning = 학습 중
+// level: run = 직접 운영, used = 업무에 사용
 // used: 기술을 눌렀을 때 나오는 설명, project: 연결할 프로젝트 id
 
 export const levels = [
-  { id: 'run', label: '직접 운영' },
-  { id: 'used', label: '프로젝트에 사용' },
-  { id: 'learning', label: '학습 중' },
+  { id: 'run', label: '직접 구축과 개발' },
+  { id: 'used', label: '업무에 사용' },
 ] as const;
 
 export type Skill = {
   name: string;
-  level: 'run' | 'used' | 'learning';
+  level: 'run' | 'used';
   used?: string;
   project?: string;
 };
@@ -230,216 +293,283 @@ export type Skill = {
 export const skillGroups: { name: string; desc: string; skills: Skill[] }[] = [
   {
     name: '개발',
-    desc: '운영 도구와 API 서버를 만듭니다.',
+    desc: '화면부터 API 서버까지 웹 서비스를 개발하고 솔루션과 연동합니다.',
     skills: [
-      { name: 'Bash', level: 'run', used: '학과 서버 계정 생성 자동화, ○○대학교 전산실' },
-      { name: 'Go', level: 'used', used: '서버 점검 도구와 API 서버', project: 'cli' },
-      { name: 'Python', level: 'used', used: '운영 스크립트' },
-      { name: 'TypeScript', level: 'used', used: '내부 도구 화면' },
-      { name: 'SQL', level: 'used', used: '서비스 데이터 조회와 쿼리 점검' },
+      { name: 'Go', level: 'run', used: 'API 서버와 리눅스 에이전트 개발', project: 'files' },
+      { name: 'Gin', level: 'run', used: 'API 서버 개발', project: 'files' },
+      { name: 'React', level: 'run', used: '서비스 화면 개발', project: 'files' },
+      { name: 'TypeScript', level: 'run', used: '서비스 화면과 API 호출 코드', project: 'files' },
+      { name: 'PostgreSQL', level: 'run', used: '서비스 데이터베이스, GORM 사용', project: 'files' },
+      { name: 'OpenAPI', level: 'run', used: 'API 계약을 기준으로 서버와 화면 코드 생성', project: 'files' },
+      { name: 'NestJS', level: 'run', used: 'API 서버와 백그라운드 작업 개발', project: 'bid' },
+      { name: 'tRPC', level: 'run', used: '웹과 서버 사이의 API', project: 'bid' },
+      { name: 'Prisma', level: 'run', used: 'PostgreSQL 모델 관리', project: 'bid' },
+      { name: 'pgvector', level: 'run', used: '입찰 공고 후보 검색', project: 'bid' },
+      { name: 'Flutter', level: 'run', used: '모바일 앱 개발', project: 'bid' },
+      { name: 'AI API 연동', level: 'run', used: '로컬 AI 에이전트와 OpenAI 호환 API로 공고 분석', project: 'bid' },
+      { name: 'JavaScript', level: 'used', used: '웹 서비스 개발' },
+      { name: 'Node.js', level: 'used', used: '웹 서비스 개발' },
+      { name: 'IBM Aspera', level: 'run', used: 'Third-Party 웹 서비스 개발, 솔루션 연동, 기술지원', project: 'aspera' },
     ],
   },
   {
-    name: '데브옵스',
-    desc: '코드가 서비스가 되는 과정을 자동화합니다.',
+    name: '컨테이너와 배포',
+    desc: '컨테이너 환경을 만들고 배포를 자동화합니다.',
     skills: [
-      { name: 'Docker', level: 'run', used: '이미지 크기를 1.1GB에서 140MB로 축소', project: 'deploy' },
-      { name: 'Kubernetes', level: 'run', used: '홈랩 클러스터, ○○테크 클러스터 운영', project: 'homelab' },
-      { name: 'GitHub Actions', level: 'run', used: '테스트, 빌드, 취약점 검사 파이프라인', project: 'deploy' },
-      { name: 'Argo CD', level: 'run', used: '홈랩 매니페스트를 Git으로 관리', project: 'homelab' },
-      { name: 'Helm', level: 'used', used: '앱 배포 차트 관리', project: 'homelab' },
-      { name: 'Terraform', level: 'used', used: 'AWS 3계층 인프라 모듈화', project: 'terraform' },
-      { name: 'Ansible', level: 'used', used: '노드 패치 시간을 4시간에서 40분으로 단축, ○○테크' },
-      { name: 'Istio', level: 'learning' },
+      { name: 'Docker', level: 'run', used: 'Docker VM 5대 운영', project: 'virtual' },
+      { name: 'Kubernetes', level: 'run', used: '컨트롤 플레인 5대, 워커 5대 클러스터 구성', project: 'k8s' },
+      { name: 'Talos', level: 'run', used: 'Kubernetes 노드 운영체제와 템플릿 구성', project: 'k8s' },
+      { name: 'Argo CD', level: 'run', used: 'App of Apps로 Application 7개 관리', project: 'k8s' },
+      { name: 'Helm, Kustomize', level: 'run', used: 'GitOps 저장소의 플랫폼과 서비스 구성', project: 'k8s' },
+      { name: 'GitHub Actions', level: 'run', used: 'CI와 릴리즈 워크플로 구성', project: 'pipeline' },
+      { name: 'Harbor', level: 'run', used: '릴리즈 때 컨테이너 이미지 빌드와 푸시', project: 'pipeline' },
+      { name: 'Git Runner', level: 'run', used: 'Runner VM 2대 운영', project: 'pipeline' },
     ],
   },
   {
-    name: '서버 운영',
-    desc: '리눅스, 네트워크, 모니터링과 장애 대응을 맡습니다.',
+    name: '서버와 가상화',
+    desc: '서버와 가상화 환경을 구축하고 이중화합니다.',
     skills: [
-      { name: 'Linux', level: 'run', used: '실습 서버 12대 운영, ○○대학교 전산실' },
-      { name: 'systemd', level: 'run', used: '서비스 등록과 재시작 정책 관리' },
-      { name: 'Nginx', level: 'run', used: 'Ingress 타임아웃 조정으로 배포 중 502 제거', project: 'deploy' },
-      { name: 'DNS, TLS', level: 'run', used: 'cert-manager로 인증서 갱신 자동화' },
-      { name: 'WireGuard', level: 'run', used: '홈랩 외부 접속 경로 제한', project: 'homelab' },
-      { name: 'Prometheus', level: 'run', used: '알림 규칙 120개 정리, ○○테크' },
-      { name: 'Grafana', level: 'run', used: '홈랩 지표 대시보드', project: 'homelab' },
-      { name: 'AWS', level: 'used', used: '3계층 인프라 코드화', project: 'terraform' },
-      { name: 'PostgreSQL', level: 'used', used: '스트리밍 복제와 백업 구성' },
-      { name: 'Redis', level: 'used', used: '세션과 캐시 저장소' },
-      { name: 'Loki', level: 'used', used: '홈랩 로그 수집', project: 'homelab' },
-      { name: 'eBPF', level: 'learning' },
-      { name: 'OpenTelemetry', level: 'learning' },
+      { name: 'Proxmox', level: 'run', used: '서버 5대 클러스터, VM 27대 구성', project: 'virtual' },
+      { name: 'Rocky Linux', level: 'run', used: 'Docker, 파일 전송, Runner VM과 템플릿 운영' },
+      { name: 'CentOS', level: 'run', used: '파일 전송 VM 3대 운영' },
+      { name: 'Pacemaker', level: 'run', used: '서버, 서비스 HA 구성', project: 'ha' },
+      { name: 'Vault', level: 'run', used: 'Kubernetes 비밀값 관리, Vault Secrets Operator 연동', project: 'k8s' },
+      { name: 'NFS', level: 'run', used: 'NFS provisioner와 모니터링 영구 볼륨', project: 'k8s' },
+    ],
+  },
+  {
+    name: '모니터링과 네트워크',
+    desc: '서비스 상태를 살피고 네트워크를 관리합니다.',
+    skills: [
+      { name: 'Prometheus', level: 'run', used: '모니터링 시스템 구축', project: 'monitor' },
+      { name: 'Grafana', level: 'run', used: '모니터링 시스템과 대시보드 구축', project: 'monitor' },
+      { name: 'Loki, Alloy', level: 'run', used: 'Kubernetes 로그 수집', project: 'monitor' },
+      { name: 'Traefik, MetalLB', level: 'run', used: 'Kubernetes 외부 접속 경로 구성', project: 'k8s' },
+      { name: '네트워크 관리', level: 'run', used: '시스템 운영과 공장 현장 N/W 유지보수' },
+      { name: 'IPT', level: 'used', used: '원넷정보기술 공장 현장 유지보수' },
     ],
   },
 ];
 
+// ── GitOps ──────────────────────────────────────────────
+// 실제 저장소 구성을 옮긴 내용입니다. 서비스명, 저장소 주소, 내부 IP와 도메인, 비밀값은 넣지 않습니다.
+// 단계는 Argo CD sync wave 순서입니다.
+
+export const gitops = {
+  workflow: 'GitOps: Git을 기준으로 Argo CD가 동기화',
+  facts: ['Application 7개', 'App of Apps', '자동 동기화와 Self Heal', '비밀값은 Vault에 보관', 'Talos 설정은 Git으로 이력 관리, 적용은 talosctl'],
+  stages: [
+    {
+      title: 'Git 저장소',
+      groups: [{ jobs: [{ name: 'Application 정의', time: '' }, { name: 'Kustomize 매니페스트', time: '' }, { name: 'Helm values', time: '' }] }],
+    },
+    {
+      title: 'Argo CD',
+      groups: [{ jobs: [{ name: 'Root Application', time: '' }] }],
+    },
+    {
+      title: '저장소와 시크릿',
+      groups: [
+        { label: 'wave -2', jobs: [{ name: 'Vault', time: '' }, { name: 'NFS provisioner', time: '' }] },
+        { label: 'wave -1', jobs: [{ name: 'Vault Secrets Operator', time: '' }] },
+      ],
+    },
+    {
+      title: '네트워크와 서비스',
+      groups: [
+        { label: '네트워크', jobs: [{ name: 'MetalLB', time: '' }, { name: 'Traefik', time: '2대' }] },
+        {
+          label: '파일 관리 서비스',
+          jobs: [
+            { name: 'frontend', time: '5대' },
+            { name: 'backend', time: '5대' },
+            { name: 'collaboration', time: '5대' },
+            { name: 'OnlyOffice', time: '' },
+            { name: 'PostgreSQL', time: '' },
+            { name: 'Redis', time: '' },
+          ],
+        },
+      ],
+    },
+    {
+      title: '모니터링',
+      groups: [
+        {
+          label: 'wave 1',
+          jobs: [
+            { name: 'Prometheus', time: '' },
+            { name: 'Grafana', time: '' },
+            { name: 'Loki', time: '' },
+            { name: 'Alloy', time: '' },
+            { name: 'Blackbox Exporter', time: '' },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+// ── 대표 프로젝트 ───────────────────────────────────────
+// 실제 프로젝트입니다. 서비스명, 저장소 주소, 내부 도메인, 계정 정보는 넣지 않습니다.
+
+const fileService = {
+  id: 'files',
+  name: '파일 관리 서비스',
+  action: { label: 'CI와 릴리즈 보기', href: '#ci' } as { label: string; href: string } | undefined,
+  summary:
+    '드라이브, 공유 링크, 메시지, 게시판, 고속 파일 전송을 한곳에서 쓰는 파일 관리 서비스입니다. 화면과 API 서버, 리눅스 에이전트, CI와 릴리즈까지 함께 만들고 있습니다.',
+  archLabel: '브라우저 화면이 API 서버에 연결되고, API 서버가 데이터베이스, 파일 저장소, Aspera 서버와 에이전트에 연결되는 구조',
+  layers: [
+    {
+      title: '화면',
+      items: [{ name: 'React, TypeScript', sub: 'TanStack Query, Router, AG Grid, Tiptap, Storybook' }],
+    },
+    {
+      title: 'API 서버',
+      items: [{ name: 'Go, Gin', sub: 'OpenAPI 계약, JWT 세션, WebSocket. 화면과 함께 이미지 하나로 배포' }],
+    },
+    {
+      title: '데이터와 저장소',
+      items: [
+        { name: 'PostgreSQL 18', sub: 'GORM, 마이그레이션' },
+        { name: '파일 저장소', sub: '로컬 또는 S3 호환' },
+      ],
+    },
+    {
+      title: '전송 서버, API 서버와 연결',
+      items: [
+        { name: 'IBM Aspera Node API', sub: '고속 파일 전송' },
+        { name: 'Go 에이전트', sub: '리눅스 서버에 설치, WebSocket으로 연결' },
+      ],
+    },
+  ],
+  features: [
+    { name: '드라이브와 권한', body: '드라이브와 파일 탐색, 즐겨찾기, 사용자와 그룹 단위 권한 관리를 제공합니다.' },
+    { name: '공유 링크', body: '외부 공유 링크를 만들고 비밀번호로 보호합니다. 접속과 전송 요청 이력은 감사 기록으로 남깁니다.' },
+    { name: '메시지', body: 'WebSocket 기반 채팅과 첨부 파일, 메시지 통계를 제공합니다.' },
+    { name: '게시판', body: '조직별 게시판과 글, 댓글을 제공하고 권한은 서버에서 현재 사용자 기준으로 검사합니다.' },
+    { name: '파일 전송', body: 'IBM Aspera로 파일을 전송하고, 전송 모니터링과 저장소 통계, 서버 에이전트 관리를 제공합니다.' },
+    { name: '계정과 보안', body: 'JWT 액세스 토큰과 회전형 리프레시 토큰을 HttpOnly 쿠키로 전달합니다. 다중 세션과 다단계 인증을 지원합니다.' },
+    { name: '관리와 통계', body: '조직과 설정 관리, 감사, 사용 통계 화면을 제공합니다.' },
+  ],
+};
+
+const bidService = {
+  id: 'bid',
+  name: 'AI 입찰 공고 분석 서비스',
+  action: undefined,
+  summary:
+    '나라장터 입찰 공고를 수집하고 AI로 분석해 자사 제품, 용역, 기술과 맞는 공고를 찾아 주는 서비스입니다. 웹과 모바일 앱, API 서버를 함께 만들었습니다.',
+  archLabel: '웹과 모바일 앱이 NestJS API 서버에 연결되고, API 서버가 PostgreSQL과 나라장터, AI에 연결되는 구조',
+  layers: [
+    {
+      title: '화면',
+      items: [
+        { name: 'React, TypeScript', sub: 'Ant Design, TanStack Query, Router, Storybook' },
+        { name: 'Flutter', sub: '모바일 앱, 푸시 알림' },
+      ],
+    },
+    {
+      title: 'API 서버',
+      items: [{ name: 'NestJS, tRPC', sub: '수집 스케줄, 분석 작업 대기열, SSE 상태 갱신' }],
+    },
+    {
+      title: '데이터',
+      items: [{ name: 'PostgreSQL 17', sub: 'Prisma, pgvector' }],
+    },
+    {
+      title: '외부 연동, API 서버와 연결',
+      items: [
+        { name: '나라장터 API', sub: '공공데이터포털 입찰 공고' },
+        { name: 'AI', sub: '로컬 CLI 에이전트 또는 OpenAI 호환 API' },
+        { name: 'Firebase, Google', sub: '소셜 로그인, 푸시 알림' },
+      ],
+    },
+  ],
+  features: [
+    { name: '공고 수집', body: '나라장터 입찰 공고를 자동이나 수동으로 수집하고, 검색, 구분별 필터, 상세 정보, 첨부파일을 제공합니다.' },
+    { name: 'AI 공고 분석', body: '로컬 AI 에이전트나 OpenAI 호환 API로 공고를 분석합니다. 분석 작업은 대기열로 처리하고 상태는 SSE로 갱신합니다.' },
+    { name: '적합 공고 찾기', body: '자사 제품, 용역, 기술을 등록하면 pgvector로 후보 공고를 찾고 AI가 적합도를 평가합니다.' },
+    { name: '소개 자료 생성', body: '브로슈어 템플릿을 올려 AI로 분석하고, 템플릿과 자사 아이템으로 PDF 소개 자료를 만듭니다.' },
+    { name: '모바일과 알림', body: 'Flutter 앱에서 주요 화면을 쓰고 Firebase 푸시 알림을 받습니다.' },
+    { name: '계정과 관리', body: 'JWT와 HttpOnly 쿠키 기반 로그인, Google 로그인, 관리자 계정 목록과 AI 실행 환경 설정을 제공합니다.' },
+  ],
+};
+
+export const featured = [fileService, bidService];
+
 // ── 프로젝트 ────────────────────────────────────────────
-// 카드 위쪽 데모 내용은 pipeline, plan, uptime, check 항목에 있습니다.
-// 데모의 서버 이름과 수치도 예시입니다.
-
-export const pipeline = {
-  file: 'deploy.yml',
-  steps: ['테스트', '이미지 빌드', '취약점 검사', '블루/그린 전환'],
-  results: ['배포 시간 12분에서 4분으로', '이미지 1.1GB에서 140MB로'],
-};
-
-export const plan = {
-  envs: [
-    {
-      name: '개발',
-      lines: [
-        '# dev',
-        '+ module.vpc',
-        '+ module.alb',
-        '+ module.asg  (min 1, max 2)',
-        '+ module.rds  (db.t3.micro)',
-      ],
-    },
-    {
-      name: '운영',
-      lines: [
-        '# prod',
-        '+ module.vpc',
-        '+ module.alb',
-        '+ module.asg  (min 3, max 8)',
-        '+ module.rds  (db.r6g.large, multi-AZ)',
-      ],
-    },
-  ],
-  total: 'Plan: 4 to add, 0 to change, 0 to destroy.',
-};
-
-export const uptime = { start: '2025.03', months: 18 };
-
-export const check = {
-  command: '$ srvcheck --all',
-  header: 'HOST     DISK  MEM  CERT',
-  rows: [
-    { line: 'web-01    62%  48%  71일 OK', warn: false },
-    { line: 'web-02    58%  51%  71일 OK', warn: false },
-    { line: 'db-01     84%  63%   -   WARN', warn: true },
-    { line: 'edge-01   33%  22%  11일 WARN', warn: true },
-  ],
-  total: '경고 2건, exit 1',
-};
+// demo: list = 항목 나열, ha = 서버 전환 버튼
+// 데모는 동작을 보여 주는 예시이며 실제 실행 결과가 아닙니다.
 
 export const projects = [
   {
-    id: 'deploy',
-    demo: 'pipeline',
-    title: '무중단 배포 파이프라인',
-    period: '2025.09 – 2025.12',
-    summary: '손으로 하던 배포를 자동화했습니다. 4개월 동안 62번 배포했고 배포로 끊긴 적은 없습니다.',
-    problem:
-      '배포할 때마다 서버에 접속해 명령어를 순서대로 입력했고, 그동안 서비스가 30초가량 끊겼습니다. 순서를 틀려 롤백한 적도 있었습니다.',
-    work: [
-      'GitHub Actions로 테스트, 이미지 빌드, 취약점 검사를 한 흐름으로 연결',
-      'Argo Rollouts로 블루/그린 배포를 적용하고 헬스 체크 실패 시 자동 롤백',
-      '빌드 캐시와 멀티 스테이지 빌드로 이미지 크기를 1.1GB에서 140MB로 축소',
-    ],
-    stack: ['GitHub Actions', 'Argo Rollouts', 'Docker', 'Trivy'],
-    link: 'https://github.com/your-id/deploy-pipeline',
+    id: 'virtual',
+    demo: 'list',
+    win: 'Proxmox VE',
+    lines: ['서버 5대 클러스터', 'VM 27대', 'VM 템플릿 5개'],
+    title: 'Proxmox 가상화 클러스터',
+    summary: '서버 5대를 클러스터로 묶고 서비스, 사내, Kubernetes 영역으로 나눠 VM 27대를 구성했습니다. 남는 자원을 활용하고 테스트 환경도 만들었습니다.',
+    stack: ['Proxmox', 'Rocky Linux', 'CentOS', 'Docker'],
   },
   {
-    id: 'terraform',
-    demo: 'plan',
-    title: 'AWS 3계층 인프라 코드화',
-    period: '2025.06 – 2025.08',
-    summary: '콘솔에서 만들던 인프라를 Terraform 모듈로 옮겼습니다. 새 환경을 만드는 시간이 하루에서 15분으로 줄었습니다.',
-    problem:
-      '누가 무엇을 바꿨는지 기록이 없어 개발 환경과 운영 환경이 조금씩 달라졌고, 같은 환경을 다시 만드는 데 하루가 걸렸습니다.',
-    work: [
-      'VPC, ALB, Auto Scaling 그룹, RDS를 모듈로 나누고 환경별 변수만 다르게 적용',
-      '상태 파일은 S3에 두고 잠금을 걸어 동시 수정 방지',
-      'PR마다 plan 결과를 댓글로 남겨 변경 내용을 리뷰',
-    ],
-    stack: ['Terraform', 'AWS', 'GitHub Actions'],
-    link: 'https://github.com/your-id/aws-infra',
+    id: 'k8s',
+    demo: 'list',
+    win: 'Kubernetes, Talos',
+    lines: ['컨트롤 플레인 5대, 워커 5대', 'Argo CD Application 7개', 'Vault로 비밀값 분리', 'Traefik, MetalLB, NFS'],
+    title: 'Talos Kubernetes와 GitOps',
+    summary: 'Proxmox 위에 Talos로 Kubernetes 클러스터를 구성하고, 플랫폼과 서비스를 Argo CD로 관리합니다. 설치와 변경은 Git을 기준으로 자동 동기화됩니다.',
+    stack: ['Kubernetes', 'Talos', 'Argo CD', 'Helm', 'Kustomize', 'Vault', 'Traefik', 'MetalLB'],
   },
   {
-    id: 'homelab',
-    demo: 'uptime',
-    title: '홈랩 쿠버네티스 클러스터',
-    period: '2025.03 – 운영 중',
-    summary: '미니 PC 세 대에 개인 서비스 여섯 개를 올려 운영합니다. 18개월 동안 계획에 없던 중단은 세 번이었습니다.',
-    problem:
-      '클라우드 콘솔에서 버튼만 눌러서는 네트워크와 스토리지가 어떻게 동작하는지 알 수 없었습니다. 장애를 직접 겪어 볼 환경이 필요했습니다.',
-    work: [
-      'k3s로 컨트롤 플레인 3대 구성, etcd 스냅샷을 외부 스토리지에 백업',
-      'Argo CD로 모든 매니페스트를 Git에서 관리',
-      'Prometheus, Grafana, Loki로 지표와 로그 수집, 알림은 메신저로 전달',
-      'WireGuard로 외부 접속 경로를 하나로 제한',
-    ],
-    stack: ['k3s', 'Argo CD', 'Prometheus', 'Longhorn', 'WireGuard'],
-    link: 'https://github.com/your-id/homelab',
+    id: 'aspera',
+    demo: 'list',
+    win: 'IBM Aspera',
+    lines: ['Third-Party 웹 서비스 개발', '솔루션 연동', '솔루션 기술지원'],
+    title: 'IBM Aspera 웹 서비스',
+    summary: 'IBM Aspera Third-Party 웹 서비스를 개발하고 솔루션 연동과 기술지원을 맡았습니다.',
+    stack: ['IBM Aspera', 'JavaScript', 'Node.js'],
   },
   {
-    id: 'cli',
-    demo: 'check',
-    title: '서버 점검 자동화 도구',
-    period: '2025.01 – 2025.02',
-    summary: '매주 한 시간씩 서버마다 접속해 확인하던 일을 Go로 만든 명령어 하나로 바꿨습니다.',
-    problem: '서버마다 접속해 디스크, 메모리, 인증서 만료일을 확인하는 데 매주 한 시간씩 썼습니다.',
-    work: [
-      'SSH로 여러 서버에 동시에 접속해 점검 항목을 수집',
-      '점검 항목을 YAML로 정의해 코드를 고치지 않고 추가',
-      '결과를 표와 JSON으로 출력하고 기준을 넘으면 종료 코드로 알림',
-    ],
-    stack: ['Go', 'SSH', 'YAML'],
-    link: 'https://github.com/your-id/srvcheck',
-  },
-];
-
-// ── 장애 기록 ───────────────────────────────────────────
-// steps는 발생, 원인, 조치, 재발 방지 순서입니다.
-// date가 홈랩 가동 기록의 달과 같으면 그 달이 빨갛게 표시됩니다.
-
-export const incidentSteps = ['발생', '원인', '조치', '재발 방지'];
-
-export const incidents = [
-  {
-    title: '디스크가 가득 차 클러스터가 멈춤',
-    date: '2025.07',
-    duration: '중단 2시간 10분',
-    steps: [
-      '클러스터가 응답하지 않았습니다.',
-      '컨테이너 로그가 제한 없이 쌓여 루트 디스크가 가득 찼고, etcd가 쓰기를 거부했습니다.',
-      '오래된 로그를 지워 공간을 확보한 뒤 etcd를 다시 시작했습니다.',
-      '로그 크기와 보관 개수를 제한하고, 디스크 사용률이 80%를 넘으면 알림이 오게 했습니다.',
-    ],
+    id: 'ha',
+    demo: 'ha',
+    win: 'Pacemaker, 동작 예시',
+    lines: ['서버 1', '서버 2'],
+    title: '서버와 서비스 HA 구성',
+    summary: 'Pacemaker 등을 사용해 서버 한 대에 문제가 생겨도 서비스가 이어지도록 구성했습니다.',
+    stack: ['Pacemaker', 'Linux'],
   },
   {
-    title: '인증서 만료로 접속 불가',
-    date: '2025.10',
-    duration: '중단 40분',
-    steps: [
-      '사이트에 접속할 수 없다는 연락을 받았습니다.',
-      '수동으로 발급한 인증서의 갱신 날짜를 놓쳤습니다.',
-      '인증서를 새로 발급해 교체했습니다.',
-      'cert-manager로 갱신을 자동화하고, 만료 14일 전에 알림을 받습니다.',
-    ],
+    id: 'pipeline',
+    demo: 'list',
+    win: 'GitHub Actions',
+    lines: ['CI: Pull Request마다 잡 22개', '백엔드 테스트 6개로 분할', '릴리즈: 수동 실행, 잡 23개', 'Harbor 이미지 푸시', 'GitHub Release 발행'],
+    title: 'GitHub Actions CI와 릴리즈',
+    summary: 'main 대상 Pull Request를 올리면 변경 범위에 맞춰 보안 검사, 프론트엔드 검사, 백엔드 빌드와 테스트가 단계별로 돌고 마지막에 결과를 확인합니다. 오래 걸리는 백엔드 테스트는 6개로 나눠 병렬로 실행합니다. 릴리즈는 같은 검증을 거친 뒤 Harbor에 이미지를 올리고 GitHub Release를 발행합니다.',
+    stack: ['GitHub Actions', 'Harbor', 'Git Runner'],
   },
   {
-    title: '파드가 반복해서 재시작됨',
-    date: '2026.02',
-    duration: '응답 지연, 중단 없음',
-    steps: [
-      '트래픽이 몰릴 때마다 응답이 느려졌습니다.',
-      '메모리 제한이 실제 사용량보다 낮아 OOMKilled가 발생했습니다.',
-      '일주일 치 사용량을 보고 requests와 limits를 다시 정했습니다.',
-      '재시작 횟수 알림을 추가하고, 새 서비스는 부하 테스트 후 값을 정합니다.',
-    ],
+    id: 'monitor',
+    demo: 'list',
+    win: '모니터링',
+    lines: ['지표 수집: Prometheus', '로그 수집: Loki, Alloy', '외부 점검: Blackbox Exporter', '화면 구성: Grafana'],
+    title: '모니터링 시스템 구축',
+    summary: 'Kubernetes의 지표와 로그를 모으고, 외부 서비스 상태와 인증서 만료를 Grafana 대시보드에서 확인합니다. Argo CD로 함께 관리합니다.',
+    stack: ['Prometheus', 'Grafana', 'Loki', 'Alloy', 'Blackbox Exporter'],
   },
 ];
 
 // ── 학력과 자격증 ───────────────────────────────────────
 
 export const timeline = [
-  { when: '2026.08', what: 'CKA 취득', where: 'CNCF' },
-  { when: '2026.02', what: '컴퓨터공학과 졸업', where: '○○대학교' },
-  { when: '2025.11', what: 'AWS Solutions Architect Associate 취득', where: 'AWS' },
-  { when: '2025.07', what: '클라우드 엔지니어링 부트캠프 수료', where: '○○ 아카데미, 6개월' },
-  { when: '2025.05', what: '정보처리기사 취득', where: '한국산업인력공단' },
-  { when: '2024.09', what: '리눅스마스터 1급 취득', where: 'KAIT' },
+  { when: '2024.08', what: '컴퓨터공학과 졸업', where: '서울사이버대학교' },
+  { when: '2018.12', what: '사무자동화산업기사', where: '한국산업인력공단' },
+  { when: '2016.12', what: '정보처리기능사', where: '한국기술자격검정원' },
+  { when: '2015.08', what: '워드프로세서 1급', where: '대한상공회의소' },
+  { when: '2013.06', what: 'GTQ 2급', where: '한국생산성본부' },
+  { when: '2013.06', what: '전산회계운용사 3급', where: '대한상공회의소' },
+  { when: '2013.06', what: 'ITQ 한글엑셀', where: '한국생산성본부' },
+  { when: '2012.12', what: 'ITQ 한글파워포인트', where: '한국생산성본부' },
+  { when: '2012.06', what: 'ITQ 아래한글', where: '한국생산성본부' },
 ];

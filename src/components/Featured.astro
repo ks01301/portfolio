@@ -1,0 +1,61 @@
+---
+import { featured } from '../data/site';
+---
+
+{
+  featured.map((p) => (
+    <article class="mv" id={`project-${p.id}`}>
+      <div class="mv-head">
+        <div>
+          <h3>{p.name}</h3>
+        </div>
+        {p.action && (
+          <a class="btn btn-sm" href={p.action.href}>
+            {p.action.label}
+          </a>
+        )}
+      </div>
+      <p class="mv-summary">{p.summary}</p>
+
+      <div class="mv-arch" role="img" aria-label={p.archLabel}>
+        {p.layers.map((l) => (
+          <div class="mv-layer">
+            <h4>{l.title}</h4>
+            {l.items.map((i) => (
+              <div class="mv-box">
+                <b>{i.name}</b>
+                <small>{i.sub}</small>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div class="mv-features" data-features={p.id}>
+        <div class="mv-tabs" role="group" aria-label={`${p.name} 주요 기능`}>
+          {p.features.map((f, i) => (
+            <button type="button" data-body={f.body} aria-pressed={i === 0 ? 'true' : 'false'}>
+              {f.name}
+            </button>
+          ))}
+        </div>
+        <p class="mv-text" aria-live="polite">
+          {p.features[0].body}
+        </p>
+      </div>
+    </article>
+  ))
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-features]').forEach((box) => {
+    const tabs = [...box.querySelectorAll<HTMLButtonElement>('button')];
+    const text = box.querySelector<HTMLElement>('.mv-text')!;
+    for (const b of tabs) {
+      b.addEventListener('click', () => {
+        tabs.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        text.textContent = b.dataset.body!;
+      });
+    }
+  });
+</script>
