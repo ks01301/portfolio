@@ -21,6 +21,7 @@ npm run build    # dist 폴더에 정적 파일 생성
 | 인프라 구성도, CI, 릴리즈, GitOps 구성 | `infra`, `infraTags`, `ci`, `release`, `gitops` |
 | 경력 | `experience` |
 | 기술과 숙련도, 사용처 | `skillGroups` |
+| 프로젝트 폴더 | `folders` |
 | 대표 프로젝트 | `fileService`, `bidService`, `featured` |
 | 프로젝트와 카드 데모 내용 | `projects` |
 | 학력과 자격증 | `timeline` |

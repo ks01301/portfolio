@@ -248,6 +248,7 @@ export const experience = [
       'Go, React 기반 파일 관리 서비스 개발',
       'NestJS, React, Flutter 기반 AI 입찰 공고 분석 서비스 개발',
       'IBM Aspera Third-Party 웹 서비스 개발',
+      'IBM Aspera 기술지원(쿠팡플레이, 퍼니플럭스, 대우건설, 아리랑TV 등)',
       'Proxmox, Docker 등 사내 가상화 환경 도입으로 잉여 자원 활용 및 테스트 환경 구축',
       'Proxmox 서버 5대로 클러스터를 구성하고 서비스, 사내, Kubernetes 용도로 VM 27대 운영',
       'Talos로 컨트롤 플레인 5대, 워커 5대의 Kubernetes 클러스터 구성',
@@ -309,7 +310,7 @@ export const skillGroups: { name: string; desc: string; skills: Skill[] }[] = [
       { name: 'AI API 연동', level: 'run', used: '로컬 AI 에이전트와 OpenAI 호환 API로 공고 분석', project: 'bid' },
       { name: 'JavaScript', level: 'used', used: '웹 서비스 개발' },
       { name: 'Node.js', level: 'used', used: '웹 서비스 개발' },
-      { name: 'IBM Aspera', level: 'run', used: 'Third-Party 웹 서비스 개발, 솔루션 연동, 기술지원', project: 'aspera' },
+      { name: 'IBM Aspera', level: 'run', used: 'Third-Party 웹 서비스 개발, 솔루션 연동, 쿠팡플레이, 퍼니플럭스, 대우건설, 아리랑TV 등 기술지원', project: 'aspera' },
     ],
   },
   {
@@ -499,6 +500,35 @@ const bidService = {
 
 export const featured = [fileService, bidService];
 
+// ── 프로젝트 폴더 ───────────────────────────────────────
+// 폴더를 열면 나오는 파일입니다. href는 누르면 이동할 위치입니다.
+
+export const folders = [
+  {
+    label: '서비스 개발',
+    files: [
+      { name: 'IBM Aspera 웹 서비스', href: '#project-aspera' },
+      { name: 'AI 입찰 공고 분석 서비스', href: '#project-bid' },
+      { name: '파일 관리 서비스', href: '#project-files' },
+    ],
+  },
+  {
+    label: '인프라 구성',
+    files: [
+      { name: '서버와 서비스 HA 구성', href: '#project-ha' },
+      { name: 'Talos Kubernetes와 GitOps', href: '#project-k8s' },
+      { name: 'Proxmox 가상화 클러스터', href: '#project-virtual' },
+    ],
+  },
+  {
+    label: '자동화와 관측',
+    files: [
+      { name: '모니터링 시스템 구축', href: '#project-monitor' },
+      { name: 'GitHub Actions CI와 릴리즈', href: '#project-pipeline' },
+    ],
+  },
+];
+
 // ── 프로젝트 ────────────────────────────────────────────
 // demo: list = 항목 나열, ha = 서버 전환 버튼
 // 데모는 동작을 보여 주는 예시이며 실제 실행 결과가 아닙니다.
@@ -526,9 +556,9 @@ export const projects = [
     id: 'aspera',
     demo: 'list',
     win: 'IBM Aspera',
-    lines: ['Third-Party 웹 서비스 개발', '솔루션 연동', '솔루션 기술지원'],
-    title: 'IBM Aspera 웹 서비스',
-    summary: 'IBM Aspera Third-Party 웹 서비스를 개발하고 솔루션 연동과 기술지원을 맡았습니다.',
+    lines: ['Third-Party 웹 서비스 개발', '솔루션 연동', '기술지원: 쿠팡플레이, 퍼니플럭스, 대우건설, 아리랑TV 등'],
+    title: 'IBM Aspera 웹 서비스와 기술지원',
+    summary: 'IBM Aspera Third-Party 웹 서비스를 개발하고 솔루션을 연동했습니다. 쿠팡플레이, 퍼니플럭스, 대우건설, 아리랑TV 등의 Aspera 기술지원도 맡았습니다.',
     stack: ['IBM Aspera', 'JavaScript', 'Node.js'],
   },
   {

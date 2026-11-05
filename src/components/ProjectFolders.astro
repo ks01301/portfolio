@@ -1,0 +1,20 @@
+---
+import GlassFolder from './ui/glass-folder-cards';
+import { folders } from '../data/site';
+---
+
+<div class="folders">
+  {
+    folders.map((f, i) => (
+      <GlassFolder
+        client:visible
+        label={f.label}
+        meta={`프로젝트 ${f.files.length}개`}
+        art="none"
+        files={f.files}
+        action="none"
+        appearDelay={i * 140}
+      />
+    ))
+  }
+</div>

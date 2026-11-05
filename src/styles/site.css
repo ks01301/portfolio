@@ -1011,6 +1011,74 @@ summary {
 }
 
 /* ── 프로젝트 ── */
+.folders {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px 28px;
+  margin-bottom: 44px;
+}
+
+.folders .gf-root {
+  font-family: var(--sans);
+}
+
+.folders .gf-title {
+  font-weight: 700;
+}
+
+.folders .gf-meta {
+  color: var(--mut);
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.folders .gf-back {
+  background: var(--sky);
+}
+
+.folders .gf-back-sheen,
+.folders .gf-spec {
+  display: none;
+}
+
+.folders .gf-back-rim path {
+  stroke: var(--fg);
+  stroke-width: 2;
+}
+
+.folders .gf-front {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.folders .gf-tint {
+  background: var(--sysbg);
+}
+
+.folders .gf-root:not(:hover, :focus-within, [data-open]) {
+  --gf-lift: 64px;
+}
+
+.folders .gf-front-rim path {
+  stroke: var(--fg);
+  stroke-width: 4;
+}
+
+.folders .gf-shadow {
+  right: 4px;
+  bottom: -5px;
+  left: 6px;
+  border-radius: 22px;
+  background: var(--fg);
+  filter: none;
+}
+
+.folders .gf-sheet {
+  box-shadow: 0 0 0 1.5px var(--fg);
+}
+
 .mv {
   margin-bottom: 36px;
   padding: 22px;
@@ -1418,6 +1486,12 @@ summary {
 
   .job::before {
     left: -27px;
+  }
+}
+
+@media (max-width: 420px) {
+  .folders .gf-root {
+    zoom: 0.84;
   }
 }
 
