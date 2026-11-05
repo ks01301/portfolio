@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // 배포 주소가 정해지면 바꿔 주세요.
-  site: 'https://example.com',
+  // GitHub Pages 주소입니다. 자체 도메인을 쓰면 site를 바꾸고 base를 지우세요.
+  site: 'https://ks01301.github.io',
+  base: '/portfolio',
 });

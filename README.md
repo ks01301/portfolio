@@ -6,7 +6,7 @@ Astro로 만든 개인 포트폴리오입니다.
 
 ```bash
 pnpm install
-pnpm dev         # http://localhost:4321
+pnpm dev         # http://localhost:4321/portfolio/
 pnpm build       # dist 폴더에 정적 파일 생성
 ```
 
@@ -30,4 +30,5 @@ pnpm build       # dist 폴더에 정적 파일 생성
 | 자격증 | `certificates` |
 
 - 색과 서체는 `src/styles/site.css`의 `:root` 변수에서 바꿉니다. 글꼴 파일은 `src/layouts/Base.astro`에서 불러옵니다.
-- 배포 주소가 정해지면 `astro.config.mjs`의 `site`를 수정하세요.
+- `main`에 푸시하면 GitHub Pages로 배포됩니다. 저장소 Settings → Pages → Source를 **GitHub Actions**로 설정해야 합니다.
+- 배포 주소는 `astro.config.mjs`의 `site`, `base`에서 바꿉니다.
